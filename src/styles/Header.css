@@ -1,8 +1,10 @@
+/* 전체 헤더 */
 .header {
   width: 100%;
   background-color: black;
 }
 
+/* 내부 정렬 */
 .header-inner {
   max-width: 1200px;
   height: 80px;
@@ -14,6 +16,7 @@
   box-sizing: border-box;
 }
 
+/* 로고 영역 */
 .logo-container {
   display: flex;
   align-items: center;
@@ -25,6 +28,7 @@
   height: 27px;
   display: block;
 }
+
 .logo-text {
   font-size: 25px;
   font-weight: 600;
@@ -32,6 +36,7 @@
   line-height: 1;
 }
 
+/* 검색창 */
 .search-container {
   flex: 1;
   margin: 0 40px;
@@ -42,16 +47,16 @@
 .search-container input {
   width: 100%;
   height: 40px;
-  background-color: #1f1f1f;
+  background-color: #2b2a2a;
   color: white;
   padding: 0 16px 0 40px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: none;
   font-size: 0.9rem;
 }
 
 .search-container input::placeholder {
-  color: #a1a1a1;
+  color: #696969;
 }
 
 .search-container img {
@@ -63,16 +68,61 @@
   height: 16px;
 }
 
+/* 로그인 버튼 */
+.login-button {
+  width: 82px;
+  height: 35px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #e6e6e6;
+}
+
+/* 프로필 영역 외부 감싸기 - 드롭다운 위치 기준 */
+.profile-container-wrapper {
+  position: relative;
+}
+
+/* 프로필 콘텐츠 */
 .profile-container {
   display: flex;
   align-items: center;
-  gap: 8px;
   color: white;
 }
 
+/* 예콩 + 원 */
+.user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default; /* 클릭 안 되게 설정 */
+}
+
+/* 프로필 동그라미 */
 .profile-circle {
   width: 32px;
   height: 32px;
   background-color: #ccc;
   border-radius: 50%;
+}
+
+/* 유저 이름 */
+.username {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+/* 화살표 아이콘 (클릭 대상) */
+.chevron-icon {
+  width: 1rem;
+  height: 1.5rem;
+  cursor: pointer;
 }

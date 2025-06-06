@@ -1,0 +1,58 @@
+.category-list {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.category-item {
+  text-align: center;
+  cursor: pointer;
+}
+
+.category-label {
+  margin-top: 8px;
+  display: block;
+  font-weight: 600;
+}
+
+.category-image,
+.category-text-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: white;
+}
+
+.category-item.active .category-image,
+.category-item.active .category-text-circle {
+  border: 3px solid black;
+}
+.category-text-circle span {
+  font-size: 14px;
+  font-weight: bold;
+  color: white !important; /* <-- 중요 */
+  text-align: center;
+  line-height: 1.2;
+}
+
+.category-text-circle span {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.category-text-circle {
+  background-color: black;
+  color: white;
+  font-size: 13px;
+}

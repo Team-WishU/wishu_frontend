@@ -1,0 +1,105 @@
+/* src/styles/ProductRegister/LoginModal.css */
+
+.login-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.login-modal {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 24rem;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #000;
+}
+
+/* ✅ 로고 + 텍스트 가로 정렬 부분 */
+.modal-header-with-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  background-color: #f6f6f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.text-block h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.text-block p {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+/* 기존 입력폼 및 버튼 스타일 */
+.modal-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  background: #f9f9f9;
+  font-size: 0.875rem;
+}
+
+.login-button {
+  width: 100%;
+  background: #000;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.signup-text {
+  font-size: 0.875rem;
+  text-align: center;
+  color: #555;
+}
+
+.signup-link {
+  color: #9333ea;
+  font-weight: 600;
+  cursor: pointer;
+}

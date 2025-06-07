@@ -1,22 +1,29 @@
-/* src/styles/ProductRegister/LoginModal.css */
-
-.login-modal-overlay {
+.modal-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 999;
+  align-items: flex-start;
+  padding: 110px 69px;
+  /* z-index: 999; */
 }
 
-.login-modal {
+.modal-box {
   background: white;
   border-radius: 1rem;
   padding: 2rem;
-  width: 24rem;
+  padding-top: 5rem;
+  width: 100%;
+  max-width: 370px;
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .modal-close {
@@ -34,15 +41,14 @@
   color: #000;
 }
 
-/* ✅ 로고 + 텍스트 가로 정렬 부분 */
-.modal-header-with-logo {
+.modal-header {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.logo-circle {
+.logo-wrapper {
   width: 60px;
   height: 60px;
   background-color: #f6f6f6;
@@ -52,28 +58,28 @@
   justify-content: center;
 }
 
-.logo-image {
+.logo-img {
   width: 36px;
   height: 36px;
   object-fit: contain;
 }
 
-.text-block h2 {
+.modal-text h2 {
   font-size: 1.25rem;
   font-weight: bold;
   margin: 0;
 }
 
-.text-block p {
+.modal-text p {
   font-size: 0.875rem;
   color: #666;
   margin: 0;
 }
 
-/* 기존 입력폼 및 버튼 스타일 */
 .modal-input {
-  width: 100%;
-  padding: 0.5rem;
+  width: 340px;
+  height: 45px;
+  padding-left: 0.5rem;
   margin-bottom: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
@@ -81,8 +87,9 @@
   font-size: 0.875rem;
 }
 
-.login-button {
-  width: 100%;
+.login-btn {
+  width: 350px;
+  height: 45px;
   background: #000;
   color: white;
   padding: 0.5rem;
@@ -92,7 +99,7 @@
   cursor: pointer;
 }
 
-.signup-text {
+.signup-msg {
   font-size: 0.875rem;
   text-align: center;
   color: #555;

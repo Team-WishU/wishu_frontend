@@ -1,0 +1,68 @@
+.dropdown-menu {
+  position: absolute;
+  top: 3rem;
+  right: 10;
+  width: 17rem; /* 약 352px */
+  height: 20.7rem; /* 약 427px */
+  background: #2b2a2a;
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-sizing: border-box;
+}
+
+/* 그룹 간 간격 정리 */
+.dropdown-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dropdown-name {
+  font-weight: bold;
+  font-size: 1.5625rem; /* 25px */
+}
+
+.dropdown-email-line {
+  font-size: 1.25rem; /* 20px */
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-email-label {
+  color: #ccc;
+  margin-right: 1rem;
+}
+
+.dropdown-email {
+  color: magenta;
+}
+
+.dropdown-link {
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid #d9d9d9;
+  margin: 0.5rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.dropdown-icon-img {
+  width: 1rem;
+  height: 1rem;
+}

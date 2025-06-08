@@ -1,83 +1,4 @@
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center; /* 화면 세로 중앙 정렬 */
-}
-
-.modal-box {
-  background: white;
-  border-radius: 2rem;
-  padding-left: 3.5rem;
-  padding-right: 3.5rem;
-  padding-top: 6rem;
-  padding-bottom: 6rem;
-  /* width: 100%; */
-  /* max-width: 370px; */
-  position: relative;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  /* gap: 12px; */
-}
-
-.modal-close {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  color: #aaa;
-  cursor: pointer;
-}
-
-.modal-close:hover {
-  color: #000;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.logo-wrapper {
-  width: 60px;
-  height: 60px;
-  background-color: #f6f6f6;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-
-.modal-text h2 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-.modal-text p {
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: #666;
-  margin: 0;
-}
-
-.modal-input {
+.input-login {
   width: 340px;
   height: 45px;
   padding-left: 1rem;
@@ -98,18 +19,5 @@
   border-radius: 0.5rem;
   margin-bottom: 0.75rem;
   font-weight: bold;
-  cursor: pointer;
-}
-
-.signup-msg {
-  font-size: 0.875rem;
-  text-align: right; /* 오른쪽 정렬 */
-  color: #555;
-  width: 100%;
-}
-
-.signup-link {
-  color: #9333ea;
-  font-weight: 600;
   cursor: pointer;
 }

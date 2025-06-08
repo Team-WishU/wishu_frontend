@@ -1,0 +1,124 @@
+/* 공통 스타일 모음 - ModalBase.css */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .modal-box {
+  background: white;
+  border-radius: 2rem;
+  padding: 6rem 3.5rem;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+  width: 500px;  
+  height: 500px;  
+  box-sizing: border-box;
+} */
+
+.modal-box {
+  width: 500px;
+  height: 500px;
+  background: white;
+  border-radius: 2rem;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* ⬅️ 수직 중앙 */
+  align-items: center; /* ⬅️ 수평 중앙 */
+  padding: 2rem;
+}
+
+.modal-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #000;
+}
+
+.modal-header-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 5rem; /* 👉 여백은 input과 통일 */
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  /* gap: 1rem; */
+}
+
+.logo-wrapper {
+  width: 60px;
+  height: 60px;
+  background-color: #f6f6f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.modal-text h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.modal-text p {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: #666;
+  margin: 0;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signup-msg,
+.login-msg {
+  font-size: 0.875rem;
+  text-align: right;
+  color: #555;
+  width: 82%;
+}
+
+.signup-link,
+.login-link {
+  color: #9333ea;
+  font-weight: 600;
+  cursor: pointer;
+}

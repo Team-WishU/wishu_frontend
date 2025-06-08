@@ -1,0 +1,123 @@
+/* 폼 전체 영역 통일된 여백/정렬용 컨테이너 */
+.profile-form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.input-profile {
+  width: 100%;
+  height: 45px;
+  padding-left: 1rem;
+  margin-bottom: 0.3rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #f0f0f0;
+  font-size: 0.875rem;
+  font-weight: 300;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.input-profile:focus {
+  border: 1px solid #c084fc;
+  outline: none;
+}
+
+.Binput-profile {
+  width: 100%;
+  height: 45px;
+  padding-left: 1rem;
+  margin-bottom: 0.3rem;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  font-weight: 300;
+  box-sizing: border-box;
+  appearance: none;
+  background: transparent;
+  color: #9e9e9e;
+}
+
+.Binput-profile:focus {
+  border-bottom: 1px solid #c084fc; /* 클릭 시 보라색 밑줄 */
+  outline: none;
+}
+
+.Binput-profile::placeholder {
+  color: #a6a6a6;
+  font-weight: 300;
+  opacity: 1;
+}
+
+.Sinput-profile {
+  width: 100%;
+  height: 45px;
+  padding: 0 2.5rem 0 1rem; /* 오른쪽 공간 확보 */
+  margin-bottom: 0.3rem;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  font-weight: 300;
+  box-sizing: border-box;
+  appearance: none;
+  background: transparent
+    url("data:image/svg+xml;utf8,<svg fill='%23ccc' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>")
+    no-repeat right 0.75rem center;
+  background-size: 1rem;
+  color: #9e9e9e;
+}
+
+.Sinput-profile:focus {
+  border-bottom: 1px solid #c084fc;
+  outline: none;
+}
+
+.Sinput-profile::placeholder {
+  color: #a6a6a6;
+  font-weight: 300;
+  opacity: 1;
+}
+
+/* 입력 완료 시 진하게 */
+.Binput-profile.filled,
+.Sinput-profile.filled {
+  color: #333;
+  font-weight: 400;
+}
+
+.label-title {
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0.2rem;
+  text-align: left;
+}
+
+.nickname-check {
+  width: 100%;
+  font-size: 0.75rem;
+  color: #888;
+  text-align: right;
+  /* margin-top: -0.5rem; */
+  /* margin-bottom: 1rem; */
+}
+
+.password-submit-btn {
+  width: 82%;
+  height: 45px;
+  background: #000;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}

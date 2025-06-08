@@ -1,0 +1,72 @@
+.input-signup {
+  width: 340px;
+  height: 45px;
+  padding-left: 1rem;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #f0f0f0;
+  font-size: 0.875rem;
+  font-weight: 300;
+}
+
+/* 클릭 시 보라색 테두리 */
+.input-signup:focus {
+  border: 1px solid #c084fc;
+  outline: none;
+}
+
+.signup-btn {
+  width: 100%;
+  height: 45px;
+  background: #000;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+/* 인증번호 입력단계용 */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 82%;
+}
+
+.prev-btn {
+  flex: 1;
+  height: 45px;
+  border: none;
+  background: #e6e6e6;
+  color: rgb(0, 0, 0);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.signup-btn {
+  flex: 1;
+  height: 45px;
+  border: none;
+  background: #e6e6e6;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.code-input {
+  border: none;
+}
+
+/* 클릭 시 보라색 테두리 */
+.input-signup:focus {
+  border: 1px solid #c084fc;
+  outline: none;
+}

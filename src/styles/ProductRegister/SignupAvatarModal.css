@@ -1,0 +1,101 @@
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #ddd;
+  position: relative;
+}
+
+.avatar-circle.selected {
+  background-color: white; /* 선택 후: 흰색 */
+}
+
+.plus-button-img {
+  position: absolute;
+  bottom: 10;
+  right: 10;
+  width: 10px;
+  height: 10px;
+  /* border-radius: 50%; */
+  /* object-fit: contain; */
+  cursor: pointer;
+}
+
+.selected-avatar-img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.plus-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #9333ea;
+  color: white;
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 5px;
+  margin-right: 3px;
+  cursor: pointer;
+}
+
+.avatar-nickname-input {
+  width: 77.5%;
+  height: 45px;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #f0f0f0;
+  font-size: 0.875rem;
+  font-weight: 300;
+}
+
+.avatar-nickname-input:focus {
+  outline: none;
+  border: 1px solid #c084fc;
+}
+
+/* 이미지 추가할 때  */
+.selected-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-options {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  /* gap: 0.75rem; */
+  /* margin-bottom: 1rem; */
+}
+
+.avatar-option {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.2s ease;
+}
+
+.avatar-option:hover {
+  border: 2px solid #9333ea;
+}

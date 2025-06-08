@@ -1,0 +1,64 @@
+.avatar-select-overlay {
+  z-index: 1000;
+}
+
+.avatar-select-modal {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* .avatar-option {
+  width: 64px;
+  height: 64px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+} */
+
+.avatar-option {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  padding: 6px;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.avatar-option:hover {
+  transform: scale(1.05);
+}
+
+.avatar-option {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  padding: 6px;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.avatar-option.mouse,
+.avatar-option.monkey,
+.avatar-option.dog {
+  padding: 12px; /* 더 많은 여백 부여 */
+}

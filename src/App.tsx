@@ -1,12 +1,10 @@
 import React from "react";
-import HomePage from "./pages/Home/HomePage";
-import TestPage from "./pages/Home/ProductRegister/test";
+import AddProducts from "./pages/Home/ProductDetail/AddProducts";
 
 function App() {
   return (
     <div className="App">
-      <HomePage />
-      <TestPage />
+      <AddProducts />
     </div>
   );
 }

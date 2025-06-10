@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/UserMenu.css";
 
 interface Props {
@@ -8,6 +9,12 @@ interface Props {
 }
 
 const UserMenu: React.FC<Props> = ({ userName, userEmail, onLogout }) => {
+  const navigate = useNavigate();
+
+  const handleGoToMyPage = () => {
+    navigate("/mypage");
+  };
+
   return (
     <div className="dropdown-menu">
       <div className="dropdown-section">
@@ -16,7 +23,7 @@ const UserMenu: React.FC<Props> = ({ userName, userEmail, onLogout }) => {
           <span className="dropdown-email-label">Email</span>
           <span className="dropdown-email">{userEmail}</span>
         </div>
-        <div className="dropdown-link">
+        <div className="dropdown-link" onClick={handleGoToMyPage}>
           내 위시템 <img src="/assets/icons/Chevron_right.svg" />
         </div>
       </div>

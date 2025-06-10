@@ -5,16 +5,30 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #8b5cf6; /* 보라색 */
+  background-color: #8b5cf6; /* 기본: 보라색 */
   color: white;
   font-size: 24px;
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 9999; /* 항상 위에 뜨게 */
-  transition: background-color 0.3s;
+  z-index: 9999;
+  transition: all 0.3s ease;
 }
 
 .floating-chat-button:hover {
   background-color: #7c3aed;
+}
+
+/* X 상태일 때 전용 스타일 */
+.floating-chat-button.close {
+  background-color: white;
+  color: #8b5cf6;
+  border: 2px solid #8b5cf6;
+}
+
+.floating-chat-icon {
+  margin-top: 5px;
+  width: 17px;
+  height: 17px;
+  z-index: 10000;
 }

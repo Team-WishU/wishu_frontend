@@ -1,0 +1,175 @@
+.chat-window-body {
+  padding: 8px 10px; /* 상하좌우 간격 */
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 내부 요소 간 간격 */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 전체 채팅 모달 */
+.chat-window-modal {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  width: 290px;
+  height: 420px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 14px;
+  z-index: 9999;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 헤더 */
+.chat-window-header {
+  display: flex;
+  align-items: center;
+}
+
+.chat-window-logo-circle {
+  width: 50px;
+  height: 50px;
+  background-color: #f6f6f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.chat-window-logo {
+  width: 36px;
+  height: 32px;
+}
+
+.chat-window-header-text h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.chat-window-sub {
+  margin: 0;
+  color: #9e9e9e;
+  font-size: 12.5px;
+}
+
+.chat-window-see-icon {
+  width: 12px;
+  height: 13px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+
+/* 메시지 콘텐츠 */
+.chat-window-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.chat-window-bubble {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end; /* ✅ 아래 정렬로 변경 */
+  gap: 8px;
+}
+
+.chat-window-logo-circle.small {
+  align-self: flex-end; /* ✅ 자신을 아래쪽 정렬 */
+  width: 36px;
+  height: 36px;
+  background-color: #f6f6f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+}
+
+.chat-window-small-logo {
+  width: 24px;
+  height: 22px;
+}
+
+.chat-window-message-box {
+  background-color: #f2f2f2;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+  white-space: pre-line;
+  max-width: 200px;
+}
+
+/* 푸터 */
+.chat-window-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-window-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.chat-window-tags button {
+  background-color: #bf00ff;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  font-size: 12.5px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 300;
+}
+
+.chat-window-tags button:hover {
+  background-color: #a000dd;
+}
+
+/* ✅ 추가된 부분: 입력창 + 아이콘 */
+.chat-window-input-wrap {
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background-color: #fff;
+}
+
+.chat-window-input {
+  flex: 1;
+  border: none;
+  font-size: 13px;
+  outline: none;
+  background-color: transparent;
+}
+
+.chat-window-input::placeholder {
+  color: #9e9e9e;
+  font-weight: 300;
+}
+
+.chat-window-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.chat-window-icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.6;
+  cursor: pointer;
+}

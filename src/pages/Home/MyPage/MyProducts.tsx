@@ -60,7 +60,7 @@ const MyProducts: React.FC = () => {
           <button
             style={{ color: 'black' }}
             className="create-button"
-            onClick={() => navigate("/addproducts")}
+            onClick={() => navigate("/ProductDetail/addproducts")}
           >
             위시템 작성
           </button>

@@ -126,3 +126,13 @@
   height: 1.5rem;
   cursor: pointer;
 }
+
+/* 로그인 버튼 */
+.loginbtn {
+  background: transparent; /* 배경 투명 */
+  color: white; /* 글씨 흰색 */
+  border: none; /* 테두리 제거 */
+  font-size: 16px; /* 글씨 크기 적당히 */
+  cursor: pointer; /* 마우스 올렸을 때 포인터로 */
+  padding: 8px 12px; /* 여백 */
+}

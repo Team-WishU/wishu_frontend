@@ -1,0 +1,114 @@
+.product-detail-container {
+  background: #f2f2f2;
+  min-height: 100vh;
+  padding: 60px 20px;
+}
+
+.product-detail-inner {
+  background: #fff;
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.product-image-section {
+  flex: 1;
+}
+
+.category-hash {
+  color: #a54aff;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-image {
+  width: 100%;
+  border-radius: 16px;
+}
+
+.product-writer {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.writer-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.writer-name {
+  font-weight: 500;
+}
+
+.product-info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.product-desc {
+  margin: 10px 0;
+  color: #555;
+}
+
+.product-price {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-tags span {
+  color: #a54aff;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.product-buttons {
+  margin: 20px 0;
+}
+
+.black-button {
+  background: black;
+  color: white;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.comment-section {
+  margin-top: 40px;
+}
+
+.comment-title {
+  font-weight: bold;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.comment-count {
+  font-weight: bold;
+}
+
+.comment-item {
+  margin-top: 5px;
+  color: #333;
+}

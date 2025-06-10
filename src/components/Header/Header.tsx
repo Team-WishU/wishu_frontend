@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 import React, { useState, useRef, useEffect } from "react";
 import UserMenu from "./UserMenu";
 import LoginModal from "../../pages/Home/ProductRegister/LoginModal";
@@ -7,6 +6,7 @@ import SignupPasswordModal from "../../pages/Home/ProductRegister/SignupPassword
 import SignupProfileModal from "../../pages/Home/ProductRegister/SignupProfileModal";
 import SignupAvatarModal from "../../pages/Home/ProductRegister/SignupAvatarModal";
 import "../../styles/Header.css";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,6 +20,7 @@ const Header: React.FC = () => {
     name: "예콩",
     email: "hihi@gmailll.com",
   });
+  const navigate = useNavigate();
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -37,11 +38,10 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="header-inner">
         {/* 왼쪽: 로고 */}
-        <div className="logo-container">
+        <div className="logo-container" onClick={() => navigate("/")}>
           <img src="/assets/icons/logo.png" alt="WishU Logo" />
           <span className="logo-text">WishU</span>
         </div>
-
         {/* 가운데: 검색 */}
         <div className="search-container">
           <input type="text" placeholder="아이템 검색" />

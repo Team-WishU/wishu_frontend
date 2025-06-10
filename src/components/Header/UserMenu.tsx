@@ -15,6 +15,10 @@ const UserMenu: React.FC<Props> = ({ userName, userEmail, onLogout }) => {
     navigate("/mypage");
   };
 
+  const handleGoToProfileSetting = () => {
+    navigate("/profile-setting");
+  };
+
   return (
     <div className="dropdown-menu">
       <div className="dropdown-section">
@@ -31,7 +35,7 @@ const UserMenu: React.FC<Props> = ({ userName, userEmail, onLogout }) => {
       <hr />
 
       <div className="dropdown-section">
-        <div className="dropdown-item">
+        <div className="dropdown-item" onClick={handleGoToProfileSetting}>
           <img
             src="/assets/icons/settings.svg"
             alt="설정"

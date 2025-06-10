@@ -1,0 +1,60 @@
+.chat-modal {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  width: 280px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  z-index: 9999;
+  font-family: sans-serif;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chat-logo {
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
+}
+
+.chat-header-text h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.chat-sub {
+  margin: 0;
+  color: gray;
+  font-size: 12px;
+}
+
+.chat-message-box {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.chat-bubble p {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.chat-start-btn {
+  margin-top: 12px;
+  background-color: #a855f7;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}

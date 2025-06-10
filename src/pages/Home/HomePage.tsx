@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import CategorySelector from "../../components/CategorySelector";
 import "../../styles/HomePage.css";
+import FloatingChatButton from "../ChatBot/FloatingChatButton";
 
 const items = [
   { id: 1, category: "상의", height: 200 },
@@ -53,6 +54,8 @@ const HomePage: React.FC = () => {
             </div>
           ))}
         </div>
+        {/* ✅ 챗봇 버튼 */}
+        <FloatingChatButton />
       </main>
     </div>
   );

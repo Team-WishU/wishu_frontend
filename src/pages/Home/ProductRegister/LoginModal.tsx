@@ -8,12 +8,14 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSwitchToSignup: () => void;
+  onLoginSuccess: () => void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({
   isOpen,
   onClose,
   onSwitchToSignup,
+  onLoginSuccess,
 }) => {
   if (!isOpen) return null;
 
@@ -48,7 +50,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
               placeholder="비밀번호를 입력해주세요."
               className="input-login"
             />
-            <button className="login-btn">로그인</button>
+            <button
+              className="login-btn"
+              onClick={() => {
+                onLoginSuccess(); // 로그인 성공 시 호출
+              }}
+            >
+              로그인
+            </button>
             <p className="signup-msg">
               계정이 없으세요?{" "}
               <span className="signup-link" onClick={onSwitchToSignup}>

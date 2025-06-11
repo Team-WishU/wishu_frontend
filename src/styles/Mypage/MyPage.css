@@ -1,3 +1,5 @@
+/* MyPage.css */
+
 .mypage-container {
   background: #f2f2f2;
   min-height: 100vh;
@@ -62,78 +64,8 @@
 }
 
 .mypage-content {
-  max-width: 100%;
+  width: 100%;
   margin: -80px auto 0;
   position: relative;
   z-index: 1;
-}
-
-.wishlist-wrapper {
-  background: #fff;
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  min-height: 490px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-
-.wishlist-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.wishlist-title {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.wishlist-actions button {
-  background: #eee;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  margin-left: 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.create-button {
-  background: #a54aff;
-  color: white;
-}
-
-.wishlist-grid {
-  width: 100%;
-  max-width: 940px; /* ✅ 내부 콘텐츠 제한 */
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 20px;
-}
-
-
-.wishlist-card {
-  text-align: center;
-}
-
-.wishlist-image {
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 8px;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-}
-
-.wishlist-name {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.wishlist-count {
-  font-size: 13px;
-  color: #777;
 }

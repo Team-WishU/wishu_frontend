@@ -1,4 +1,6 @@
-.wishlist-wrapper {
+/* MyWishlist.css */
+
+.wishlist-container-wishlist {
   background: #fff;
   border-radius: 24px;
   padding: 30px;
@@ -7,77 +9,74 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 auto;
+  /* width: 100%;
+  max-width: 1200px; */
 }
 
-.wishlist-header {
+.wishlist-header-wishlist {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  width: 100%;
-  max-width: 940px;
+  width: 80%;
 }
 
-.wishlist-title {
+.wishlist-title-wishlist {
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 400;
+  color: #5c5c5c;
 }
 
-.wishlist-actions {
+.wishlist-actions-wishlist {
   display: flex;
   gap: 10px;
 }
 
-.wishlist-actions button {
-  background: #eee;
+.create-button-wishlist {
+  background: #ebebeb;
   border: none;
   border-radius: 8px;
   padding: 6px 12px;
   cursor: pointer;
   font-size: 14px;
-  color: #000000;
+  color: #5c5c5c;
 }
 
-.create-button {
-  background: #a54aff;
-  color: #000000;
-}
-
-.wishlist-grid {
-  width: 100%;
-  max-width: 940px;
+.wishlist-grid-wishlist {
+  width: 80%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); /* 너비를 400px에서 500px로 늘림 */
-  gap: 32px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
 }
 
-.wishlist-card {
-  text-align: center;
+.wishlist-card-wishlist {
+  text-align: left;
 }
 
-.wishlist-image-wrapper {
+.wishlist-image-wrapper-wishlist {
   display: flex;
   width: 100%;
-  height: 200px; /* 높이는 그대로 유지 */
+  height: 200px;
   gap: 4px;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 15px;
 }
 
-.wishlist-image-multi {
-  flex: 1; /* 동일한 너비로 조정 */
+.wishlist-image-multi-wishlist {
+  flex: 1;
   height: 100%;
   object-fit: cover;
-  min-width: 0; /* 오버플로우 방지 */
+  min-width: 0;
 }
 
-.wishlist-name {
+.wishlist-name-wishlist {
   font-weight: bold;
   margin-bottom: 4px;
 }
 
-.wishlist-count {
+.wishlist-count-wishlist {
   font-size: 13px;
   color: #000000;
 }

@@ -50,29 +50,31 @@ const wishlistData: WishlistCategory[] = [
 
 const MyWishlist: React.FC = () => {
   return (
-    <div className="wishlist-wrapper">
-      <div className="wishlist-header">
-        <div className="wishlist-title">{wishlistData.length}개의 위시템</div>
-        <div className="wishlist-actions">
-          <button className="create-button">편집</button>
+    <div className="wishlist-container-wishlist">
+      <div className="wishlist-header-wishlist">
+        <div className="wishlist-title-wishlist">
+          {wishlistData.length}개의 위시템
+        </div>
+        <div className="wishlist-actions-wishlist">
+          <button className="create-button-wishlist">편집</button>
         </div>
       </div>
 
-      <div className="wishlist-grid">
+      <div className="wishlist-grid-wishlist">
         {wishlistData.map((item) => (
-          <div key={item.name} className="wishlist-card">
-            <div className="wishlist-image-wrapper">
+          <div key={item.name} className="wishlist-card-wishlist">
+            <div className="wishlist-image-wrapper-wishlist">
               {item.images.map((src, idx) => (
                 <img
                   key={idx}
                   src={src}
                   alt={`${item.name}-${idx}`}
-                  className="wishlist-image-multi"
+                  className="wishlist-image-multi-wishlist"
                 />
               ))}
             </div>
-            <div className="wishlist-name">{item.name}</div>
-            <div className="wishlist-count">위시템 {item.count}개</div>
+            <div className="wishlist-name-wishlist">{item.name}</div>
+            <div className="wishlist-count-wishlist">위시템 {item.count}개</div>
           </div>
         ))}
       </div>

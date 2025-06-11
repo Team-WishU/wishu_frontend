@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Masonry from "react-masonry-css"; // 추가
+
 import Header from "../../components/Header/Header";
 import CategorySelector from "../../components/CategorySelector";
-import "../../styles/HomePage.css";
 import FloatingChatButton from "../ChatBot/FloatingChatButton";
+import "../../styles/HomePage.css";
 
 const items = [
-  { id: 1, category: "상의", height: 200 },
-  { id: 2, category: "상의", height: 250 },
-  { id: 3, category: "하의", height: 180 },
-  { id: 4, category: "신발", height: 300 },
-  { id: 5, category: "액세서리", height: 160 },
-  { id: 6, category: "폰케이스", height: 220 },
+  { id: 1, category: "상의", imageUrl: "/assets/images/product/bottom/bottom1.png" },
+  { id: 2, category: "상의", imageUrl: "/assets/images/product/bottom/bottom2.png" },
+  { id: 3, category: "하의", imageUrl: "/assets/images/product/bottom/bottom3.png" },
+  { id: 4, category: "신발", imageUrl: "/assets/images/product/bottom/bottom4.png" },
+  { id: 5, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom5.png" },
+  { id: 6, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom6.png" },
+  { id: 7, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom7.png" },
+  { id: 8, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom8.png" },
+  { id: 9, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom9.png" },
+  { id: 10, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom10.png" },
 ];
 
 const HomePage: React.FC = () => {
@@ -27,6 +33,14 @@ const HomePage: React.FC = () => {
     navigate(`/product/${id}`);
   };
 
+  const breakpointColumnsObj = {
+    default: 5,
+    1400: 4,
+    1024: 3,
+    768: 2,
+    480: 1,
+  };
+
   return (
     <div>
       <Header />
@@ -39,22 +53,26 @@ const HomePage: React.FC = () => {
           # {selectedCategory} <span style={{ color: "black" }}>위시템</span>
         </h2>
 
-        <div className="masonry-grid">
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
           {filteredItems.map((item) => (
             <div
               key={item.id}
               className="masonry-item"
-              style={{
-                height: `${item.height}px`,
-                cursor: "pointer",
-              }}
               onClick={() => handleItemClick(item.id)}
             >
-              아이템 {item.id}
+              <img
+                src={item.imageUrl}
+                alt={`item-${item.id}`}
+                className="masonry-img"
+              />
             </div>
           ))}
-        </div>
-        {/* ✅ 챗봇 버튼 */}
+        </Masonry>
+
         <FloatingChatButton />
       </main>
     </div>

@@ -1,4 +1,4 @@
-.wishlist-container-wishlist {
+.wishlist-container-category {
   background: #fff;
   border-radius: 24px;
   padding: 30px;
@@ -10,26 +10,26 @@
   margin: 0 auto;
 }
 
-.wishlist-header-wishlist {
+.wishlist-header-category {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   width: 80%;
 }
 
-.wishlist-title-wishlist {
+.wishlist-title-category {
   font-size: 18px;
   font-weight: 400;
   color: #5c5c5c;
 }
 
-.wishlist-actions-wishlist {
+.wishlist-actions-category {
   display: flex;
   gap: 10px;
 }
 
-.create-button-wishlist {
+.create-button-category {
   background: #ebebeb;
   border: none;
   border-radius: 8px;
@@ -39,51 +39,38 @@
   color: #5c5c5c;
 }
 
-.wishlist-grid-wishlist {
+.category-hashtag {
+  width: 80%;
+  text-align: left;
+  margin-bottom: 12px;
+  color: #8a4be2;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.wishlist-grid-category {
   width: 80%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
 }
 
-.wishlist-card-wishlist {
-  text-align: left;
-}
-
-.wishlist-image-wrapper-wishlist {
-  display: flex;
-  width: 100%;
-  height: 200px;
-  gap: 4px;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 15px;
-}
-
-.wishlist-image-box-wishlist {
+.wishlist-image-box-category {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.wishlist-image-multi-wishlist {
+.wishlist-image-category {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.wishlist-name-wishlist {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.wishlist-count-wishlist {
-  font-size: 13px;
-  color: #000000;
-}
-
-.delete-icon-wishlist {
+.delete-icon-category {
   position: absolute;
   top: 6px;
   right: 6px;
@@ -91,4 +78,14 @@
   height: 20px;
   cursor: pointer;
   z-index: 2;
+}
+
+.back-button-category {
+  background: #ebebeb;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #5c5c5c;
 }

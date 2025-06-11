@@ -2,68 +2,33 @@
   padding: 24px;
 }
 
-.category-list {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.category-item {
-  text-align: center;
-  cursor: pointer;
-}
-
-.category-circle {
-  width: 64px;
-  height: 64px;
-  background-color: #e2e2e2;
-  border-radius: 50%;
-  margin: 0 auto 8px;
-}
-
-.category-item.active .category-circle {
-  background-color: black;
-}
-
-.category-item.active span {
-  color: black;
-  font-weight: bold;
-}
-
 .section-title {
   color: #6c49ff;
   font-size: 20px;
   margin: 16px 0;
 }
 
-/* Masonry Layout */
-.masonry-grid {
-  column-count: 2;
-  column-gap: 16px;
+.my-masonry-grid {
+  display: flex;
+  margin-left: -16px;
+  width: auto;
 }
 
-@media (min-width: 768px) {
-  .masonry-grid {
-    column-count: 3;
-  }
-}
-
-@media (min-width: 1024px) {
-  .masonry-grid {
-    column-count: 4;
-  }
+.my-masonry-grid_column {
+  padding-left: 16px;
+  background-clip: padding-box;
 }
 
 .masonry-item {
-  background-color: #d9d9d9;
-  border-radius: 12px;
   margin-bottom: 16px;
-  break-inside: avoid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  color: #333;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.masonry-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
 }

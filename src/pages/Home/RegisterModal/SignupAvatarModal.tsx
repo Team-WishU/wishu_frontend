@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import api from "../../../../src/utils/axiosInstance";
-import { useUser } from "../../../../src/context/UserContext";
+import api from "../../../utils/axiosInstance";
+import { useUser } from "../../../context/UserContext";
 import AvatarSelectModal from "./AvatarSelectModal";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupAvatarModal.css";

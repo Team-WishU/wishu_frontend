@@ -3,7 +3,7 @@ import api from "../../../src/utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import Header from "../../../src/components/Header/Header";
-import AvatarSelectModal from "../../pages/Home/ProductRegister/AvatarSelectModal";
+import AvatarSelectModal from "../Home/RegisterModal/AvatarSelectModal";
 import "../../styles/ProfileSetting.css";
 
 const avatarImages = [
@@ -92,15 +92,8 @@ const ProfileSetting: React.FC = () => {
           <div className="profile-section">
             <label className="profile-label">프로필 사진</label>
             <div className="profile-image-wrapper">
-              <img
-                src={`/assets/images/Signup/${profileImage}`}
-                alt="프로필"
-                className="profile-avatar"
-              />
-              <button
-                className="upload-button"
-                onClick={() => setShowAvatarModal(true)}
-              >
+              <img src={`/assets/images/Signup/${profileImage}`} alt="프로필" className="profile-avatar" />
+              <button className="upload-button" onClick={() => setShowAvatarModal(true)}>
                 +
               </button>
             </div>

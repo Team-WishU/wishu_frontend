@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../../src/utils/axiosInstance";
+import api from "../../../utils/axiosInstance";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupModal.css";
 
@@ -13,13 +13,7 @@ interface SignupModalProps {
   setEmail: (email: string) => void;
 }
 
-const SignupModal: React.FC<SignupModalProps> = ({
-  isOpen,
-  onClose,
-  onSwitchToLogin,
-  onNextToPassword,
-  setEmail,
-}) => {
+const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLogin, onNextToPassword, setEmail }) => {
   const [step, setStep] = useState(1);
   const [localEmail, setLocalEmail] = useState("");
   const [code, setCode] = useState("");
@@ -76,7 +70,9 @@ const SignupModal: React.FC<SignupModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
 
         <div className="modal-content">
           <div className="modal-header-wrapper">
@@ -111,11 +107,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
 
           <div className="button-group">
             {step === 1 ? (
-              <button
-                className={`signup-btn ${isEmailValid ? "enabled-btn" : ""}`}
-                onClick={handleSendCode}
-                disabled={!isEmailValid}
-              >
+              <button className={`signup-btn ${isEmailValid ? "enabled-btn" : ""}`} onClick={handleSendCode} disabled={!isEmailValid}>
                 인증번호 전송
               </button>
             ) : (
@@ -123,11 +115,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
                 <button className="prev-btn" onClick={() => setStep(1)}>
                   이전
                 </button>
-                <button
-                  className={`signup-btn ${isCodeFilled ? "enabled-btn" : ""}`}
-                  onClick={handleVerifyCode}
-                  disabled={!isCodeFilled}
-                >
+                <button className={`signup-btn ${isCodeFilled ? "enabled-btn" : ""}`} onClick={handleVerifyCode} disabled={!isCodeFilled}>
                   다음
                 </button>
               </>
@@ -135,7 +123,10 @@ const SignupModal: React.FC<SignupModalProps> = ({
           </div>
 
           <p className="login-msg">
-            계정이 있으신가요? <span className="login-link" onClick={onSwitchToLogin}>로그인하기</span>
+            계정이 있으신가요?{" "}
+            <span className="login-link" onClick={onSwitchToLogin}>
+              로그인하기
+            </span>
           </p>
         </div>
       </div>

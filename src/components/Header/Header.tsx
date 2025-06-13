@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import UserMenu from "./UserMenu";
 import LoginModal from "../../pages/Home/ProductRegister/LoginModal";
 import SignupModal from "../../pages/Home/ProductRegister/SignupModal";
@@ -6,7 +7,6 @@ import SignupPasswordModal from "../../pages/Home/ProductRegister/SignupPassword
 import SignupProfileModal from "../../pages/Home/ProductRegister/SignupProfileModal";
 import SignupAvatarModal from "../../pages/Home/ProductRegister/SignupAvatarModal";
 import "../../styles/Header.css";
-import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,21 +33,33 @@ const Header: React.FC = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const avatarBasePath = "/assets/images/Signup/";
 
-  // 로그인 상태 유지
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-    if (storedUser && token) {
-      const parsed = JSON.parse(storedUser);
-      setIsLoggedIn(true);
-      setUserInfo({
-        name: parsed.nickname || parsed.name || "",
-        email: parsed.email,
-        avatar: parsed.profileImage
-          ? `${avatarBasePath}${parsed.profileImage}`
-          : "",
-      });
-    }
+    const loadUser = () => {
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("accessToken");
+
+      if (storedUser && token) {
+        const parsed = JSON.parse(storedUser);
+        setIsLoggedIn(true);
+        setUserInfo({
+          name: parsed.nickname || parsed.name || "",
+          email: parsed.email,
+          avatar: parsed.profileImage
+            ? `${avatarBasePath}${parsed.profileImage}`
+            : "",
+        });
+      } else {
+        setIsLoggedIn(false);
+        setUserInfo({ name: "", email: "", avatar: "" });
+      }
+    };
+
+    loadUser(); // 초기 실행
+    window.addEventListener("userUpdated", loadUser); // ✅ 프로필 수정 반영
+
+    return () => {
+      window.removeEventListener("userUpdated", loadUser);
+    };
   }, []);
 
   useEffect(() => {
@@ -63,10 +75,11 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-inner">
-        <div className="logo-container" onClick={() => navigate("/")}> 
+        <div className="logo-container" onClick={() => navigate("/")}>
           <img src="/assets/icons/logo.png" alt="WishU Logo" />
           <span className="logo-text">WishU</span>
         </div>
+
         <div className="search-container">
           <input type="text" placeholder="아이템 검색" />
           <img src="/assets/icons/search.svg" alt="Search Icon" />
@@ -84,14 +97,14 @@ const Header: React.FC = () => {
             <div className="profile-container">
               <div className="user-trigger">
                 <div className="profile-circle">
-                  {userInfo.avatar ? (
+                  {userInfo.avatar && (
                     <img
                       src={userInfo.avatar}
                       alt="avatar"
                       className="avatar-img"
                       style={{ width: "100%", height: "100%", borderRadius: "50%" }}
                     />
-                  ) : null}
+                  )}
                 </div>
                 <span className="username">{userInfo.name}</span>
                 <img
@@ -112,7 +125,7 @@ const Header: React.FC = () => {
                     setIsLoggedIn(false);
                     setIsMenuOpen(false);
                     setUserInfo({ name: "", email: "", avatar: "" });
-                    localStorage.removeItem("token");
+                    localStorage.removeItem("accessToken");
                     localStorage.removeItem("user");
                   }}
                 />

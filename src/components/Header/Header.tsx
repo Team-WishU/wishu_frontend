@@ -16,13 +16,39 @@ const Header: React.FC = () => {
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    name: "예콩",
-    email: "hihi@gmailll.com",
-  });
-  const navigate = useNavigate();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [realName, setRealName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [gender, setGender] = useState("");
+
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    email: "",
+    avatar: "",
+  });
+
+  const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
+  const avatarBasePath = "/assets/images/Signup/";
+
+  // 로그인 상태 유지
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (storedUser && token) {
+      const parsed = JSON.parse(storedUser);
+      setIsLoggedIn(true);
+      setUserInfo({
+        name: parsed.nickname || parsed.name || "",
+        email: parsed.email,
+        avatar: parsed.profileImage
+          ? `${avatarBasePath}${parsed.profileImage}`
+          : "",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -37,18 +63,15 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-inner">
-        {/* 왼쪽: 로고 */}
-        <div className="logo-container" onClick={() => navigate("/")}>
+        <div className="logo-container" onClick={() => navigate("/")}> 
           <img src="/assets/icons/logo.png" alt="WishU Logo" />
           <span className="logo-text">WishU</span>
         </div>
-        {/* 가운데: 검색 */}
         <div className="search-container">
           <input type="text" placeholder="아이템 검색" />
           <img src="/assets/icons/search.svg" alt="Search Icon" />
         </div>
 
-        {/* 오른쪽: 로그인 또는 사용자 */}
         <div className="profile-container-wrapper" ref={menuRef}>
           {!isLoggedIn ? (
             <button
@@ -60,7 +83,16 @@ const Header: React.FC = () => {
           ) : (
             <div className="profile-container">
               <div className="user-trigger">
-                <div className="profile-circle" />
+                <div className="profile-circle">
+                  {userInfo.avatar ? (
+                    <img
+                      src={userInfo.avatar}
+                      alt="avatar"
+                      className="avatar-img"
+                      style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+                    />
+                  ) : null}
+                </div>
                 <span className="username">{userInfo.name}</span>
                 <img
                   src="/assets/icons/Chevron_Down.svg"
@@ -77,8 +109,11 @@ const Header: React.FC = () => {
                   userName={userInfo.name}
                   userEmail={userInfo.email}
                   onLogout={() => {
-                    setIsLoggedIn(false); // 로그아웃 처리
-                    setIsMenuOpen(false); // 드롭다운 닫기
+                    setIsLoggedIn(false);
+                    setIsMenuOpen(false);
+                    setUserInfo({ name: "", email: "", avatar: "" });
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
                   }}
                 />
               )}
@@ -87,7 +122,6 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* 모달 컴포넌트들 */}
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
@@ -96,8 +130,19 @@ const Header: React.FC = () => {
           setSignupModalOpen(true);
         }}
         onLoginSuccess={() => {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const parsed = JSON.parse(storedUser);
+            setUserInfo({
+              name: parsed.nickname || parsed.name || "",
+              email: parsed.email,
+              avatar: parsed.profileImage
+                ? `${avatarBasePath}${parsed.profileImage}`
+                : "",
+            });
+          }
           setLoginModalOpen(false);
-          setIsLoggedIn(true); // 로그인 상태 전환
+          setIsLoggedIn(true);
         }}
       />
 
@@ -112,6 +157,7 @@ const Header: React.FC = () => {
           setSignupModalOpen(false);
           setPasswordOpen(true);
         }}
+        setEmail={setEmail}
       />
 
       <SignupPasswordModal
@@ -125,12 +171,16 @@ const Header: React.FC = () => {
           setPasswordOpen(false);
           setLoginModalOpen(true);
         }}
+        setPassword={setPassword}
       />
 
       <SignupProfileModal
         isOpen={profileOpen}
         onClose={() => setProfileOpen(false)}
-        onSubmit={() => {
+        onSubmit={(name, birthValue, genderValue) => {
+          setRealName(name);
+          setBirth(birthValue);
+          setGender(genderValue);
           setProfileOpen(false);
           setAvatarOpen(true);
         }}
@@ -144,14 +194,30 @@ const Header: React.FC = () => {
         isOpen={avatarOpen}
         onClose={() => setAvatarOpen(false)}
         onSubmit={() => {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const parsed = JSON.parse(storedUser);
+            setUserInfo({
+              name: parsed.nickname || parsed.name || "",
+              email: parsed.email,
+              avatar: parsed.profileImage
+                ? `${avatarBasePath}${parsed.profileImage}`
+                : "",
+            });
+          }
           setAvatarOpen(false);
-          setIsLoggedIn(true); // 회원가입 완료 후 로그인 상태로
+          setIsLoggedIn(true);
           alert("회원가입 완료!");
         }}
         onSwitchToLogin={() => {
           setAvatarOpen(false);
           setLoginModalOpen(true);
         }}
+        email={email}
+        password={password}
+        realName={realName}
+        birth={birth}
+        gender={gender}
       />
     </header>
   );

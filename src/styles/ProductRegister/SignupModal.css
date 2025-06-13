@@ -70,3 +70,15 @@
   border: 1px solid #c084fc;
   outline: none;
 }
+
+.signup-btn.enabled-btn {
+  background: #000;
+  color: white;
+  cursor: pointer;
+}
+
+.signup-btn:disabled {
+  background: #e6e6e6;
+  color: #999;
+  cursor: not-allowed;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import api from "../../../../src/utils/axiosInstance";
-import { useUser } from "../../../../src/context/UserContext";
+import api from "../../../utils/axiosInstance";
+import { useUser } from "../../../context/UserContext";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/LoginModal.css";
 
@@ -13,12 +13,7 @@ interface LoginModalProps {
   onLoginSuccess: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({
-  isOpen,
-  onClose,
-  onSwitchToSignup,
-  onLoginSuccess,
-}) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSignup, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useUser();
@@ -55,7 +50,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
 
         <div className="modal-content">
           <div className="modal-header-wrapper">
@@ -89,7 +86,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               로그인
             </button>
             <p className="signup-msg">
-              계정이 없으신가요? {" "}
+              계정이 없으신가요?{" "}
               <span className="signup-link" onClick={onSwitchToSignup}>
                 가입하기
               </span>

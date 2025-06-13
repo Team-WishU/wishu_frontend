@@ -15,7 +15,10 @@
 .avatar-circle.selected {
   background-color: white; /* 선택 후: 흰색 */
 }
-
+.nickname-hint {
+  color: #a1a1a1;
+  margin-top: 0;
+}
 .plus-button-img {
   position: absolute;
   bottom: 10;
@@ -52,9 +55,16 @@
   margin-right: 3px;
   cursor: pointer;
 }
-
+.nickname-check-group {
+  width: 80%;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
 .avatar-nickname-input {
-  width: 77.5%;
+  width: 70.5%;
   height: 45px;
   padding-left: 1rem;
   margin-bottom: 1rem;
@@ -70,6 +80,24 @@
   border: 1px solid #c084fc;
 }
 
+.nickname-check-btn {
+  width: 30.5%;
+  height: 45px;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #e6e6e6;
+  margin-bottom: 1rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nickname-check-btn.active {
+  background-color: #000;
+  color: white;
+}
 /* 이미지 추가할 때  */
 .selected-avatar-img {
   width: 100%;

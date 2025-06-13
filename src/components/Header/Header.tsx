@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UserMenu from "./UserMenu";
-import LoginModal from "../../pages/Home/ProductRegister/LoginModal";
-import SignupModal from "../../pages/Home/ProductRegister/SignupModal";
-import SignupPasswordModal from "../../pages/Home/ProductRegister/SignupPasswordModal";
-import SignupProfileModal from "../../pages/Home/ProductRegister/SignupProfileModal";
-import SignupAvatarModal from "../../pages/Home/ProductRegister/SignupAvatarModal";
+import LoginModal from "../../pages/Home/RegisterModal/LoginModal";
+import SignupModal from "../../pages/Home/RegisterModal/SignupModal";
+import SignupPasswordModal from "../../pages/Home/RegisterModal/SignupPasswordModal";
+import SignupProfileModal from "../../pages/Home/RegisterModal/SignupProfileModal";
+import SignupAvatarModal from "../../pages/Home/RegisterModal/SignupAvatarModal";
 import { useUser } from "../../context/UserContext";
 import api from "../../utils/axiosInstance";
 import "../../styles/Header.css";
@@ -61,14 +61,12 @@ const Header: React.FC = () => {
   }, [isLoggedIn, logout]);
 
   const defaultAvatar = "/assets/images/Signup/default.png";
-  const avatarSrc = user.avatar?.includes("/assets")
-    ? user.avatar
-    : `/assets/images/Signup/${user.avatar || "default.png"}`;
+  const avatarSrc = user.avatar?.includes("/assets") ? user.avatar : `/assets/images/Signup/${user.avatar || "default.png"}`;
 
   return (
     <header className="header">
       <div className="header-inner">
-        <div className="logo-container" onClick={() => navigate("/")}> 
+        <div className="logo-container" onClick={() => navigate("/")}>
           <img src="/assets/icons/logo.png" alt="WishU Logo" />
           <span className="logo-text">WishU</span>
         </div>

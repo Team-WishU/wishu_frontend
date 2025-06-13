@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupPasswordModal.css";
 
@@ -9,6 +9,7 @@ interface SignupPasswordModalProps {
   onClose: () => void;
   onNextToProfile: () => void;
   onSwitchToLogin: () => void;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SignupPasswordModal: React.FC<SignupPasswordModalProps> = ({
@@ -16,15 +17,44 @@ const SignupPasswordModal: React.FC<SignupPasswordModalProps> = ({
   onClose,
   onNextToProfile,
   onSwitchToLogin,
+  setPassword,
 }) => {
-  const [password, setPassword] = useState("");
+  const [localPassword, setLocalPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const isMatch = password && confirmPassword && password === confirmPassword;
+  const isMatch =
+    localPassword && confirmPassword && localPassword === confirmPassword;
   const isMismatch =
-    password && confirmPassword && password !== confirmPassword;
+    localPassword && confirmPassword && localPassword !== confirmPassword;
+
+  useEffect(() => {
+    if (!isOpen) {
+      setLocalPassword("");
+      setConfirmPassword("");
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const handleNext = () => {
+    if (!localPassword || !confirmPassword) {
+      alert("비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
+    if (localPassword.length < 6) {
+      alert("비밀번호는 최소 6자 이상이어야 합니다.");
+      return;
+    }
+
+    if (isMismatch) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    setPassword(localPassword);
+    onNextToProfile();
+  };
 
   return (
     <div className="modal-overlay">
@@ -50,8 +80,8 @@ const SignupPasswordModal: React.FC<SignupPasswordModalProps> = ({
             type="password"
             placeholder="비밀번호를 입력해주세요."
             className="input-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={localPassword}
+            onChange={(e) => setLocalPassword(e.target.value)}
           />
           <input
             type="password"
@@ -66,16 +96,9 @@ const SignupPasswordModal: React.FC<SignupPasswordModalProps> = ({
           )}
           {isMatch && <p className="password-hint match">비밀번호 일치</p>}
 
-          <button className="password-submit-btn" onClick={onNextToProfile}>
+          <button className="password-submit-btn" onClick={handleNext}>
             다음으로
           </button>
-
-          <p className="login-msg">
-            계정이 있으세요?{" "}
-            <span className="login-link" onClick={onSwitchToLogin}>
-              로그인하기
-            </span>
-          </p>
         </div>
       </div>
     </div>

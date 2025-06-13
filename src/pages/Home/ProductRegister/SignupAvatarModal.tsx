@@ -2,29 +2,35 @@ import { useEffect, useState } from "react";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupAvatarModal.css";
 import AvatarSelectModal from "./AvatarSelectModal";
+import axios from "axios";
 
 const logo = process.env.PUBLIC_URL + "/assets/icons/logo.png";
 
 const avatarImages = [
-  "/assets/images/Signup/mouse.png", // 쥐
-  "/assets/images/Signup/cow.png", // 소
-  "/assets/images/Signup/tiger.png", // 호랑이
-  "/assets/images/Signup/rabbit.png", // 토끼
-  "/assets/images/Signup/dragon.png", // 용
-  "/assets/images/Signup/snake.png", // 뱀
-  "/assets/images/Signup/horse.png", // 말
-  "/assets/images/Signup/sheep.png", // 양
-  "/assets/images/Signup/monkey.png", // 원숭이
-  "/assets/images/Signup/chicken.png", // 닭
-  "/assets/images/Signup/dog.png", // 개
-  "/assets/images/Signup/pig.png", // 돼지
+  "/assets/images/Signup/mouse.png",
+  "/assets/images/Signup/cow.png",
+  "/assets/images/Signup/tiger.png",
+  "/assets/images/Signup/rabbit.png",
+  "/assets/images/Signup/dragon.png",
+  "/assets/images/Signup/snake.png",
+  "/assets/images/Signup/horse.png",
+  "/assets/images/Signup/sheep.png",
+  "/assets/images/Signup/monkey.png",
+  "/assets/images/Signup/chicken.png",
+  "/assets/images/Signup/dog.png",
+  "/assets/images/Signup/pig.png",
 ];
 
 interface SignupAvatarModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (nickname: string, avatar: string) => void;
   onSwitchToLogin: () => void;
+  email: string;
+  password: string;
+  realName: string;
+  birth: string;
+  gender: string;
 }
 
 const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
@@ -32,27 +38,85 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
   onClose,
   onSubmit,
   onSwitchToLogin,
+  email,
+  password,
+  realName,
+  birth,
+  gender,
 }) => {
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const [showAvatarOptions, setShowAvatarOptions] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [nicknameValid, setNicknameValid] = useState<boolean | null>(null);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 
-  // ✅ 여기 안에서 선언해야 합니다
   useEffect(() => {
     if (isOpen) {
       setSelectedAvatar(null);
-      setShowAvatarOptions(false);
+      setNickname("");
+      setNicknameValid(null);
       setShowAvatarModal(false);
     }
   }, [isOpen]);
+
+  const checkNickname = async () => {
+    if (!nickname.trim()) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/users/check-nickname?nickname=${nickname}`
+      );
+      if (res.data.isAvailable === false) {
+        setNicknameValid(false);
+        alert("이미 사용 중인 닉네임입니다.");
+      } else {
+        setNicknameValid(true);
+        alert("사용 가능한 닉네임입니다!");
+      }
+    } catch (err) {
+      alert("닉네임 확인 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleRegister = async () => {
+    if (!nickname || !selectedAvatar) {
+      alert("닉네임과 아바타를 모두 선택해주세요.");
+      return;
+    }
+    if (!nicknameValid) {
+      alert("닉네임 중복 확인을 완료해주세요.");
+      return;
+    }
+
+    const profileImage = selectedAvatar.split("/").pop();
+    const birthDate = `20${birth.slice(0, 2)}-${birth.slice(2, 4)}-${birth.slice(4, 6)}`;
+
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/users/register`, {
+        email,
+        password,
+        nickname,
+        profileImage,
+        name: realName,
+        birthDate,
+        gender,
+      });
+
+      alert("회원가입이 완료되었습니다.");
+      onSubmit(nickname, selectedAvatar);
+    } catch (err) {
+      alert("회원가입 실패. 다시 시도해주세요.");
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <button className="modal-close" onClick={onClose}>
-          ✕
-        </button>
+        <button className="modal-close" onClick={onClose}>✕</button>
 
         <div className="modal-content">
           <div className="modal-header-wrapper">
@@ -67,7 +131,6 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
             </div>
           </div>
 
-          {/* ✅ 클릭 시 옵션 표시 */}
           <div className="avatar-wrapper">
             <div
               className={`avatar-circle ${selectedAvatar ? "selected" : ""}`}
@@ -91,37 +154,35 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
             </div>
           </div>
 
-          {/* ✅ 옵션들 표시 */}
-          {showAvatarOptions && (
-            <div className="avatar-options">
-              {avatarImages.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`avatar-${idx}`}
-                  className="avatar-option"
-                  onClick={() => {
-                    setSelectedAvatar(img);
-                    setShowAvatarOptions(false);
-                  }}
-                />
-              ))}
-            </div>
+          <div className="nickname-check-group">
+            <input
+              type="text"
+              placeholder="닉네임을 입력해주세요."
+              value={nickname}
+              onChange={(e) => {
+                setNickname(e.target.value);
+                setNicknameValid(null);
+              }}
+              className="avatar-nickname-input"
+            />
+            <button onClick={checkNickname} className="nickname-check-btn">
+              중복 확인
+            </button>
+          </div>
+
+          {nicknameValid === true && (
+            <p className="nickname-hint valid">사용 가능한 닉네임입니다.</p>
+          )}
+          {nicknameValid === false && (
+            <p className="nickname-hint invalid">이미 사용 중인 닉네임입니다.</p>
           )}
 
-          <input
-            type="text"
-            placeholder="닉네임을 입력해주세요."
-            className="avatar-nickname-input"
-          />
-
-          <button className="password-submit-btn" onClick={onSubmit}>
-            회원가입
+          <button className="password-submit-btn" onClick={handleRegister}>
+            가입 완료
           </button>
         </div>
       </div>
 
-      {/* 아바타 선택 모달 */}
       <AvatarSelectModal
         isOpen={showAvatarModal}
         avatars={avatarImages}

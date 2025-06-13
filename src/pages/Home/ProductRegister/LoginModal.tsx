@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/LoginModal.css";
+import axios from "axios";
 
 const logo = process.env.PUBLIC_URL + "/assets/icons/logo.png";
 
@@ -17,7 +18,30 @@ const LoginModal: React.FC<LoginModalProps> = ({
   onSwitchToSignup,
   onLoginSuccess,
 }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   if (!isOpen) return null;
+
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
+        email,
+        password,
+      });
+
+      const { accessToken, user } = res.data;
+
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      alert("로그인 성공!");
+      onLoginSuccess();
+      onClose();
+    } catch (err) {
+      alert("로그인 실패! 이메일 또는 비밀번호를 확인해주세요.");
+    }
+  };
 
   return (
     <div className="modal-overlay">
@@ -44,18 +68,17 @@ const LoginModal: React.FC<LoginModalProps> = ({
               type="email"
               placeholder="이메일(아이디)를 입력해주세요."
               className="input-login"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="비밀번호를 입력해주세요."
               className="input-login"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <button
-              className="login-btn"
-              onClick={() => {
-                onLoginSuccess(); // 로그인 성공 시 호출
-              }}
-            >
+            <button className="login-btn" onClick={handleLogin}>
               로그인
             </button>
             <p className="signup-msg">

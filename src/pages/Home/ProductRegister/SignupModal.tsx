@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupModal.css";
 
@@ -9,6 +10,7 @@ interface SignupModalProps {
   onClose: () => void;
   onSwitchToLogin: () => void;
   onNextToPassword: () => void;
+  setEmail: (email: string) => void;
 }
 
 const SignupModal: React.FC<SignupModalProps> = ({
@@ -16,21 +18,65 @@ const SignupModal: React.FC<SignupModalProps> = ({
   onClose,
   onSwitchToLogin,
   onNextToPassword,
+  setEmail,
 }) => {
-  const [step, setStep] = useState(1); // 1단계: 이메일, 2단계: 인증번호
+  const [step, setStep] = useState(1);
+  const [localEmail, setLocalEmail] = useState("");
+  const [code, setCode] = useState("");
 
-  // 모달이 열릴 때마다 step 초기화
   useEffect(() => {
-    if (isOpen) setStep(1);
+    if (isOpen) {
+      setStep(1);
+      setLocalEmail("");
+      setCode("");
+    }
   }, [isOpen]);
+
   if (!isOpen) return null;
+
+  const handleSendCode = async () => {
+    if (!localEmail.includes("@") || !localEmail.includes(".")) {
+      alert("올바른 이메일 형식을 입력해주세요.");
+      return;
+    }
+
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/email-verification/request`, {
+        email: localEmail,
+      });
+      alert("인증번호가 전송되었습니다.");
+      setStep(2);
+    } catch {
+      alert("인증번호 전송 실패. 이메일을 확인해주세요.");
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!code.trim()) {
+      alert("인증번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/email-verification/verify`, {
+        email: localEmail,
+        code,
+      });
+      alert("이메일 인증이 완료되었습니다.");
+      setEmail(localEmail);
+      onNextToPassword();
+    } catch {
+      alert("인증번호가 올바르지 않습니다.");
+    }
+  };
+
+  const isEmailValid = localEmail.includes("@") && localEmail.includes(".");
+  const isCodeFilled = code.trim().length > 0;
 
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <button className="modal-close" onClick={onClose}>
-          ✕
-        </button>
+        <button className="modal-close" onClick={onClose}>✕</button>
 
         <div className="modal-content">
           <div className="modal-header-wrapper">
@@ -49,6 +95,8 @@ const SignupModal: React.FC<SignupModalProps> = ({
             type="email"
             placeholder="example@example.com"
             className="input-signup"
+            value={localEmail}
+            onChange={(e) => setLocalEmail(e.target.value)}
           />
 
           {step === 2 && (
@@ -56,20 +104,30 @@ const SignupModal: React.FC<SignupModalProps> = ({
               type="text"
               placeholder="인증번호 6자리"
               className="input-signup code-input"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
             />
           )}
 
           <div className="button-group">
             {step === 1 ? (
-              <button className="signup-btn" onClick={() => setStep(2)}>
-                다음
+              <button
+                className={`signup-btn ${isEmailValid ? "enabled-btn" : ""}`}
+                onClick={handleSendCode}
+                disabled={!isEmailValid}
+              >
+                인증번호 전송
               </button>
             ) : (
               <>
                 <button className="prev-btn" onClick={() => setStep(1)}>
                   이전
                 </button>
-                <button className="signup-btn" onClick={onNextToPassword}>
+                <button
+                  className={`signup-btn ${isCodeFilled ? "enabled-btn" : ""}`}
+                  onClick={handleVerifyCode}
+                  disabled={!isCodeFilled}
+                >
                   다음
                 </button>
               </>
@@ -77,10 +135,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
           </div>
 
           <p className="login-msg">
-            계정이 있으세요?{" "}
-            <span className="login-link" onClick={onSwitchToLogin}>
-              로그인하기
-            </span>
+            계정이 있으세요? <span className="login-link" onClick={onSwitchToLogin}>로그인하기</span>
           </p>
         </div>
       </div>

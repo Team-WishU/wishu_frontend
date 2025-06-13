@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../src/utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context/UserContext";
 import Header from "../../../src/components/Header/Header";
 import AvatarSelectModal from "../../pages/Home/ProductRegister/AvatarSelectModal";
 import "../../styles/ProfileSetting.css";
@@ -20,65 +21,55 @@ const avatarImages = [
   "/assets/images/Signup/pig.png",
 ];
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const ProfileSetting: React.FC = () => {
   const [nickname, setNickname] = useState("");
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const navigate = useNavigate();
-
-  const token = localStorage.getItem("accessToken");
+  const { user, logout } = useUser();
 
   useEffect(() => {
-    console.log("🔐 accessToken from localStorage:", token);
-
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
-      return;
-    }
-
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${API_URL}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await api.get("/users/me", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         });
         setNickname(res.data.nickname);
         setProfileImage(res.data.profileImage);
-      } catch (err) {
-        console.error("❌ 사용자 정보 불러오기 실패:", err);
-        alert("사용자 정보를 불러오지 못했습니다.");
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          alert("계정 정보가 존재하지 않아 자동 로그아웃됩니다.");
+          logout();
+          navigate("/");
+        } else {
+          alert("사용자 정보를 불러오지 못했습니다.");
+        }
       }
     };
 
     fetchUser();
-  }, []);
+  }, [navigate, logout]);
 
   const handleUpdateProfile = async () => {
     try {
-      await axios.patch(
-        `${API_URL}/users/me`,
+      await api.patch(
+        "/users/me",
         { nickname, profileImage },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             "Content-Type": "application/json",
           },
         }
       );
 
-      // ✅ localStorage 업데이트
-      const updatedUser = JSON.parse(localStorage.getItem("user") || "{}");
-      updatedUser.nickname = nickname;
-      updatedUser.profileImage = profileImage;
+      const updatedUser = {
+        ...user,
+        name: nickname,
+        avatar: `/assets/images/Signup/${profileImage}`,
+      };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      // ✅ Header에 반영되도록 이벤트 발송
       window.dispatchEvent(new Event("userUpdated"));
-
       alert("프로필이 성공적으로 수정되었습니다.");
       navigate("/");
     } catch (error: any) {

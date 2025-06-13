@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import api from "../../../../src/utils/axiosInstance";
+import { useUser } from "../../../../src/context/UserContext";
+import AvatarSelectModal from "./AvatarSelectModal";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupAvatarModal.css";
-import AvatarSelectModal from "./AvatarSelectModal";
-import axios from "axios";
 
 const logo = process.env.PUBLIC_URL + "/assets/icons/logo.png";
 
@@ -48,6 +49,7 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
   const [nickname, setNickname] = useState("");
   const [nicknameValid, setNicknameValid] = useState<boolean | null>(null);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const { login } = useUser();
 
   useEffect(() => {
     if (isOpen) {
@@ -65,9 +67,7 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
     }
 
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users/check-nickname?nickname=${nickname}`
-      );
+      const res = await api.get(`/users/check-nickname?nickname=${nickname}`);
       if (!res.data.isAvailable) {
         setNicknameValid(false);
         alert("이미 사용 중인 닉네임입니다.");
@@ -94,8 +94,7 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
     const birthDate = `20${birth.slice(0, 2)}-${birth.slice(2, 4)}-${birth.slice(4, 6)}`;
 
     try {
-      // 1. 회원가입
-      await axios.post(`${process.env.REACT_APP_API_URL}/users/register`, {
+      await api.post("/users/register", {
         email,
         password,
         nickname,
@@ -105,23 +104,20 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
         gender,
       });
 
-      // 2. 자동 로그인
-      const loginRes = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        email,
-        password,
-      });
-
+      const loginRes = await api.post("/auth/login", { email, password });
       const { accessToken, user } = loginRes.data;
 
-      // 3. 토큰 + 유저 정보 저장
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
-
-      // 4. Header 갱신용 커스텀 이벤트
       window.dispatchEvent(new Event("userUpdated"));
 
-      onSubmit(); // Header 갱신 및 모달 닫기
+      login({
+        name: user.nickname || user.name || "",
+        email: user.email,
+        avatar: user.profileImage || "", // 경로는 context에서 보정
+      });
 
+      onSubmit();
     } catch {
       alert("회원가입 실패. 다시 시도해주세요.");
     }

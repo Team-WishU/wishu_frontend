@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import api from "../../../../src/utils/axiosInstance";
+import { useUser } from "../../../../src/context/UserContext";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/LoginModal.css";
-import axios from "axios";
 
 const logo = process.env.PUBLIC_URL + "/assets/icons/logo.png";
 
@@ -20,21 +21,28 @@ const LoginModal: React.FC<LoginModalProps> = ({
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useUser();
 
   if (!isOpen) return null;
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      const res = await api.post("/auth/login", {
         email,
         password,
       });
 
       const { accessToken, user } = res.data;
 
-      // ✅ 통일된 키 이름으로 저장
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
+      window.dispatchEvent(new Event("userUpdated"));
+
+      login({
+        name: user.nickname || user.name || "",
+        email: user.email,
+        avatar: user.profileImage || "", // context가 경로 가공 처리
+      });
 
       alert("로그인 성공!");
       onLoginSuccess();
@@ -47,9 +55,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <button className="modal-close" onClick={onClose}>
-          ✕
-        </button>
+        <button className="modal-close" onClick={onClose}>✕</button>
 
         <div className="modal-content">
           <div className="modal-header-wrapper">
@@ -83,7 +89,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               로그인
             </button>
             <p className="signup-msg">
-              계정이 없으세요?{" "}
+              계정이 없으신가요? {" "}
               <span className="signup-link" onClick={onSwitchToSignup}>
                 가입하기
               </span>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../../src/utils/axiosInstance";
 import "../../../styles/ProductRegister/ModalBase.css";
 import "../../../styles/ProductRegister/SignupModal.css";
 
@@ -41,7 +41,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/email-verification/request`, {
+      await api.post("/email-verification/request", {
         email: localEmail,
       });
       alert("인증번호가 전송되었습니다.");
@@ -58,7 +58,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/email-verification/verify`, {
+      await api.post("/email-verification/verify", {
         email: localEmail,
         code,
       });
@@ -135,7 +135,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
           </div>
 
           <p className="login-msg">
-            계정이 있으세요? <span className="login-link" onClick={onSwitchToLogin}>로그인하기</span>
+            계정이 있으신가요? <span className="login-link" onClick={onSwitchToLogin}>로그인하기</span>
           </p>
         </div>
       </div>

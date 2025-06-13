@@ -70,8 +70,8 @@ const SignupPasswordModal: React.FC<SignupPasswordModalProps> = ({
                 <img src={logo} alt="Wishu Logo" className="logo-img" />
               </div>
               <div className="modal-text">
-                <h2>위시유에 가입하기</h2>
-                <p>우리의 위시 아이템을 편리하게 담아두세요!</p>
+                <h2>비밀번호 설정</h2>
+                <p>안전하게 계정을 보호하세요</p>
               </div>
             </div>
           </div>

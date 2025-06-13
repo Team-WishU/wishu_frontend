@@ -56,8 +56,8 @@ const SignupProfileModal: React.FC<SignupProfileModalProps> = ({
                 <img src={logo} alt="Wishu Logo" className="logo-img" />
               </div>
               <div className="modal-text">
-                <h2>위시유에 가입하기</h2>
-                <p>회원정보를 입력해주세요.</p>
+                <h2>기본 정보 입력</h2>
+                <p>이름, 생년월일, 성별을 입력해주세요</p>
               </div>
             </div>
           </div>

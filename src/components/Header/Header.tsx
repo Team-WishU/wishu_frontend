@@ -6,10 +6,11 @@ import SignupModal from "../../pages/Home/ProductRegister/SignupModal";
 import SignupPasswordModal from "../../pages/Home/ProductRegister/SignupPasswordModal";
 import SignupProfileModal from "../../pages/Home/ProductRegister/SignupProfileModal";
 import SignupAvatarModal from "../../pages/Home/ProductRegister/SignupAvatarModal";
+import { useUser } from "../../context/UserContext";
+import api from "../../utils/axiosInstance";
 import "../../styles/Header.css";
 
 const Header: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [signupModalOpen, setSignupModalOpen] = useState(false);
@@ -23,44 +24,9 @@ const Header: React.FC = () => {
   const [birth, setBirth] = useState("");
   const [gender, setGender] = useState("");
 
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    email: "",
-    avatar: "",
-  });
-
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
-  const avatarBasePath = "/assets/images/Signup/";
-
-  useEffect(() => {
-    const loadUser = () => {
-      const storedUser = localStorage.getItem("user");
-      const token = localStorage.getItem("accessToken");
-
-      if (storedUser && token) {
-        const parsed = JSON.parse(storedUser);
-        setIsLoggedIn(true);
-        setUserInfo({
-          name: parsed.nickname || parsed.name || "",
-          email: parsed.email,
-          avatar: parsed.profileImage
-            ? `${avatarBasePath}${parsed.profileImage}`
-            : "",
-        });
-      } else {
-        setIsLoggedIn(false);
-        setUserInfo({ name: "", email: "", avatar: "" });
-      }
-    };
-
-    loadUser(); // 초기 실행
-    window.addEventListener("userUpdated", loadUser); // ✅ 프로필 수정 반영
-
-    return () => {
-      window.removeEventListener("userUpdated", loadUser);
-    };
-  }, []);
+  const { user, isLoggedIn, login, logout } = useUser();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -72,10 +38,37 @@ const Header: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        await api.get("/users/me", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          alert("계정이 존재하지 않아 자동 로그아웃됩니다.");
+          logout();
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+          window.dispatchEvent(new Event("userUpdated"));
+        }
+      }
+    };
+
+    if (isLoggedIn) verifyUser();
+  }, [isLoggedIn, logout]);
+
+  const defaultAvatar = "/assets/images/Signup/default.png";
+  const avatarSrc = user.avatar?.includes("/assets")
+    ? user.avatar
+    : `/assets/images/Signup/${user.avatar || "default.png"}`;
+
   return (
     <header className="header">
       <div className="header-inner">
-        <div className="logo-container" onClick={() => navigate("/")}>
+        <div className="logo-container" onClick={() => navigate("/")}> 
           <img src="/assets/icons/logo.png" alt="WishU Logo" />
           <span className="logo-text">WishU</span>
         </div>
@@ -87,26 +80,24 @@ const Header: React.FC = () => {
 
         <div className="profile-container-wrapper" ref={menuRef}>
           {!isLoggedIn ? (
-            <button
-              onClick={() => setLoginModalOpen(true)}
-              className="loginbtn"
-            >
+            <button onClick={() => setLoginModalOpen(true)} className="loginbtn">
               로그인
             </button>
           ) : (
             <div className="profile-container">
               <div className="user-trigger">
                 <div className="profile-circle">
-                  {userInfo.avatar && (
-                    <img
-                      src={userInfo.avatar}
-                      alt="avatar"
-                      className="avatar-img"
-                      style={{ width: "100%", height: "100%", borderRadius: "50%" }}
-                    />
-                  )}
+                  <img
+                    src={avatarSrc}
+                    alt="avatar"
+                    className="avatar-img"
+                    style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = defaultAvatar;
+                    }}
+                  />
                 </div>
-                <span className="username">{userInfo.name}</span>
+                <span className="username">{user.name}</span>
                 <img
                   src="/assets/icons/Chevron_Down.svg"
                   alt="메뉴 열기"
@@ -117,19 +108,7 @@ const Header: React.FC = () => {
                   }}
                 />
               </div>
-              {isMenuOpen && (
-                <UserMenu
-                  userName={userInfo.name}
-                  userEmail={userInfo.email}
-                  onLogout={() => {
-                    setIsLoggedIn(false);
-                    setIsMenuOpen(false);
-                    setUserInfo({ name: "", email: "", avatar: "" });
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("user");
-                  }}
-                />
-              )}
+              {isMenuOpen && <UserMenu />}
             </div>
           )}
         </div>
@@ -143,19 +122,7 @@ const Header: React.FC = () => {
           setSignupModalOpen(true);
         }}
         onLoginSuccess={() => {
-          const storedUser = localStorage.getItem("user");
-          if (storedUser) {
-            const parsed = JSON.parse(storedUser);
-            setUserInfo({
-              name: parsed.nickname || parsed.name || "",
-              email: parsed.email,
-              avatar: parsed.profileImage
-                ? `${avatarBasePath}${parsed.profileImage}`
-                : "",
-            });
-          }
           setLoginModalOpen(false);
-          setIsLoggedIn(true);
         }}
       />
 
@@ -207,20 +174,8 @@ const Header: React.FC = () => {
         isOpen={avatarOpen}
         onClose={() => setAvatarOpen(false)}
         onSubmit={() => {
-          const storedUser = localStorage.getItem("user");
-          if (storedUser) {
-            const parsed = JSON.parse(storedUser);
-            setUserInfo({
-              name: parsed.nickname || parsed.name || "",
-              email: parsed.email,
-              avatar: parsed.profileImage
-                ? `${avatarBasePath}${parsed.profileImage}`
-                : "",
-            });
-          }
-          setAvatarOpen(false);
-          setIsLoggedIn(true);
           alert("회원가입 완료!");
+          setAvatarOpen(false);
         }}
         onSwitchToLogin={() => {
           setAvatarOpen(false);

@@ -65,9 +65,7 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
     }
 
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users/check-nickname?nickname=${nickname}`
-      );
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/users/check-nickname?nickname=${nickname}`);
       if (!res.data.isAvailable) {
         setNicknameValid(false);
         alert("이미 사용 중인 닉네임입니다.");
@@ -121,7 +119,6 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
       window.dispatchEvent(new Event("userUpdated"));
 
       onSubmit(); // Header 갱신 및 모달 닫기
-
     } catch {
       alert("회원가입 실패. 다시 시도해주세요.");
     }
@@ -132,7 +129,9 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
 
         <div className="modal-content">
           <div className="modal-header-wrapper">
@@ -148,23 +147,12 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
           </div>
 
           <div className="avatar-wrapper">
-            <div
-              className={`avatar-circle ${selectedAvatar ? "selected" : ""}`}
-              onClick={() => setShowAvatarModal(true)}
-            >
+            <div className={`avatar-circle ${selectedAvatar ? "selected" : ""}`} onClick={() => setShowAvatarModal(true)}>
               {selectedAvatar ? (
-                <img
-                  src={selectedAvatar}
-                  alt="selected avatar"
-                  className="selected-avatar-img"
-                />
+                <img src={selectedAvatar} alt="selected avatar" className="selected-avatar-img" />
               ) : (
                 <div className="plus-button">
-                  <img
-                    src="/assets/images/Signup/plus.png"
-                    alt="plus icon"
-                    className="plus-button-img"
-                  />
+                  <img src="/assets/images/Signup/plus.png" alt="plus icon" className="plus-button-img" />
                 </div>
               )}
             </div>
@@ -181,17 +169,13 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
               }}
               className="avatar-nickname-input"
             />
-            <button onClick={checkNickname} className="nickname-check-btn">
+            <button onClick={checkNickname} className={`nickname-check-btn ${nickname.trim() ? "active" : ""}`}>
               중복 확인
             </button>
           </div>
 
-          {nicknameValid === true && (
-            <p className="nickname-hint valid">사용 가능한 닉네임입니다.</p>
-          )}
-          {nicknameValid === false && (
-            <p className="nickname-hint invalid">이미 사용 중인 닉네임입니다.</p>
-          )}
+          {nicknameValid === true && <p className="nickname-hint valid">사용 가능한 닉네임입니다.</p>}
+          {nicknameValid === false && <p className="nickname-hint invalid">이미 사용 중인 닉네임입니다.</p>}
 
           <button className="password-submit-btn" onClick={handleRegister}>
             가입 완료

@@ -32,7 +32,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
       const { accessToken, user } = res.data;
 
-      localStorage.setItem("token", accessToken);
+      // ✅ 통일된 키 이름으로 저장
+      localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
 
       alert("로그인 성공!");
@@ -54,7 +55,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
           <div className="modal-header-wrapper">
             <div className="modal-header">
               <div className="logo-wrapper">
-                <img src={logo} alt="Wishu Logo" className="logo-img" />
+                <img src={logo} alt="WishU Logo" className="logo-img" />
               </div>
               <div className="modal-text">
                 <h2>WELCOME!</h2>

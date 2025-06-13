@@ -24,7 +24,7 @@ const avatarImages = [
 interface SignupAvatarModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (nickname: string, avatar: string) => void;
+  onSubmit: () => void;
   onSwitchToLogin: () => void;
   email: string;
   password: string;
@@ -68,14 +68,14 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/check-nickname?nickname=${nickname}`
       );
-      if (res.data.isAvailable === false) {
+      if (!res.data.isAvailable) {
         setNicknameValid(false);
         alert("이미 사용 중인 닉네임입니다.");
       } else {
         setNicknameValid(true);
         alert("사용 가능한 닉네임입니다!");
       }
-    } catch (err) {
+    } catch {
       alert("닉네임 확인 중 오류가 발생했습니다.");
     }
   };
@@ -94,6 +94,7 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
     const birthDate = `20${birth.slice(0, 2)}-${birth.slice(2, 4)}-${birth.slice(4, 6)}`;
 
     try {
+      // 1. 회원가입
       await axios.post(`${process.env.REACT_APP_API_URL}/users/register`, {
         email,
         password,
@@ -104,9 +105,24 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
         gender,
       });
 
-      alert("회원가입이 완료되었습니다.");
-      onSubmit(nickname, selectedAvatar);
-    } catch (err) {
+      // 2. 자동 로그인
+      const loginRes = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
+        email,
+        password,
+      });
+
+      const { accessToken, user } = loginRes.data;
+
+      // 3. 토큰 + 유저 정보 저장
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // 4. Header 갱신용 커스텀 이벤트
+      window.dispatchEvent(new Event("userUpdated"));
+
+      onSubmit(); // Header 갱신 및 모달 닫기
+
+    } catch {
       alert("회원가입 실패. 다시 시도해주세요.");
     }
   };

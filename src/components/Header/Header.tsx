@@ -87,7 +87,7 @@ const Header: React.FC = () => {
       }
 
       const res = await api.get(`/products/autocomplete?input=${input}`);
-      setSuggestions(res.data);
+      setSuggestions(res.data); // ex: ["[브랜드] zara", "[태그] 힙합"]
       setShowSuggestions(true);
     } catch (err) {
       console.error("자동완성 에러:", err);
@@ -127,18 +127,23 @@ const Header: React.FC = () => {
           />
           {showSuggestions && suggestions.length > 0 && (
             <ul className="suggestions">
-              {suggestions.map((item, idx) => (
-                <li
-                  key={idx}
-                  onClick={() => {
-                    setSearchKeyword(item);
-                    setShowSuggestions(false);
-                    navigate(`/search?keyword=${encodeURIComponent(item)}`);
-                  }}
-                >
-                  {item}
-                </li>
-              ))}
+              {suggestions.map((item, idx) => {
+                const keywordOnly = item.replace(/^\[[^\]]+\]\s*/, ""); // [브랜드] 제거
+                return (
+                  <li
+                    key={idx}
+                    onClick={() => {
+                      setSearchKeyword(keywordOnly);
+                      setShowSuggestions(false);
+                      navigate(
+                        `/search?keyword=${encodeURIComponent(keywordOnly)}`
+                      );
+                    }}
+                  >
+                    {item}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

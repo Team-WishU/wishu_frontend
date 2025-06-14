@@ -1,36 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Masonry from "react-masonry-css"; // 추가
+import Masonry from "react-masonry-css";
+import axios from "axios";
 
 import Header from "../../components/Header/Header";
 import CategorySelector from "../../components/CategorySelector";
 import FloatingChatButton from "../ChatBot/FloatingChatButton";
 import "../../styles/HomePage.css";
 
-const items = [
-  { id: 1, category: "상의", imageUrl: "/assets/images/product/bottom/bottom1.png" },
-  { id: 2, category: "상의", imageUrl: "/assets/images/product/bottom/bottom2.png" },
-  { id: 3, category: "하의", imageUrl: "/assets/images/product/bottom/bottom3.png" },
-  { id: 4, category: "신발", imageUrl: "/assets/images/product/bottom/bottom4.png" },
-  { id: 5, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom5.png" },
-  { id: 6, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom6.png" },
-  { id: 7, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom7.png" },
-  { id: 8, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom8.png" },
-  { id: 9, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom9.png" },
-  { id: 10, category: "액세서리", imageUrl: "/assets/images/product/bottom/bottom10.png" },
-];
+const API_BASE = process.env.REACT_APP_API_URL;
 
 const HomePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const filteredItems =
-    selectedCategory === "전체"
-      ? items
-      : items.filter((item) => item.category === selectedCategory);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/products`);
+        // 최신순 정렬 (createdAt 내림차순)
+        const sorted = res.data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setProducts(sorted);
+      } catch (err) {
+        console.error("상품 불러오기 실패", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleItemClick = (id: number) => {
-    navigate(`/product/${id}`);
+    fetchProducts();
+  }, []);
+
+  const filteredItems = selectedCategory === "전체" ? products : products.filter((item) => item.category === selectedCategory);
+
+  const handleItemClick = (id: string) => {
+    navigate(`/products/${id}`);
   };
 
   const breakpointColumnsObj = {
@@ -41,37 +47,28 @@ const HomePage: React.FC = () => {
     480: 1,
   };
 
+  if (loading) return <div>로딩 중...</div>;
+
   return (
     <div>
       <Header />
       <main className="home-container">
-        <CategorySelector
-          selected={selectedCategory}
-          onSelect={setSelectedCategory}
-        />
+        <CategorySelector selected={selectedCategory} onSelect={setSelectedCategory} />
         <h2 className="section-title">
           # {selectedCategory} <span style={{ color: "black" }}>위시템</span>
         </h2>
 
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="masonry-item"
-              onClick={() => handleItemClick(item.id)}
-            >
-              <img
-                src={item.imageUrl}
-                alt={`item-${item.id}`}
-                className="masonry-img"
-              />
-            </div>
-          ))}
-        </Masonry>
+        {filteredItems.length === 0 ? (
+          <p style={{ padding: "200px", textAlign: "center" }}>해당 카테고리에 등록된 상품이 없습니다.</p>
+        ) : (
+          <Masonry breakpointCols={breakpointColumnsObj} className="my-masonry-grid" columnClassName="my-masonry-grid_column">
+            {filteredItems.map((item) => (
+              <div key={item._id} className="masonry-item" onClick={() => handleItemClick(item._id)}>
+                <img src={item.imageUrl} alt={item.title} className="masonry-img" />
+              </div>
+            ))}
+          </Masonry>
+        )}
 
         <FloatingChatButton />
       </main>

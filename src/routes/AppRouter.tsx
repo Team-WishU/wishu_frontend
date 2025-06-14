@@ -7,15 +7,15 @@ import AddProducts from "../pages/Home/ProductDetail/AddProducts";
 import ProfileSetting from "../pages/Setting/Profile_Setting";
 
 const AppRouter = () => {
-    return (
-        <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/ProductDetail/addproducts" element={<AddProducts />} />
-            <Route path="/profile-setting" element={<ProfileSetting />} />
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/products/:id" element={<ProductDetailPage />} />
+      <Route path="/mypage" element={<MyPage />} />
+      <Route path="/ProductDetail/addproducts" element={<AddProducts />} />
+      <Route path="/profile-setting" element={<ProfileSetting />} />
+    </Routes>
+  );
 };
 
 export default AppRouter;

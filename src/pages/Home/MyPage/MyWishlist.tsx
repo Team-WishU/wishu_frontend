@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../../styles/Mypage/MyWishlist.css";
 import CategoryDetail from "./CategoryDetail"; // 추가
-
+import WishlistDetail from "./WishlistDetail";
 interface WishlistCategory {
   name: string;
   count: number;
@@ -44,20 +44,18 @@ const MyWishlist: React.FC = () => {
   const handleDelete = (categoryName: string) => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
-      setWishlistData(prev => prev.filter(item => item.name !== categoryName));
+      setWishlistData((prev) => prev.filter((item) => item.name !== categoryName));
     }
   };
 
   if (selectedCategory) {
     return (
-      <CategoryDetail
+      <WishlistDetail
         category={selectedCategory.name}
         images={selectedCategory.images}
         onBack={() => setSelectedCategory(null)}
         onDelete={() => {
-          setWishlistData(prev =>
-            prev.filter(item => item.name !== selectedCategory.name)
-          );
+          setWishlistData((prev) => prev.filter((item) => item.name !== selectedCategory.name));
           setSelectedCategory(null);
         }}
       />

@@ -1,23 +1,21 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
-import { Product } from "./MyProducts";
+import { useNavigate } from "react-router-dom";
 import "../../../styles/Mypage/CategoryDetail.css";
 
 interface Props {
   category: string;
-  products: Product[];
+  images: string[];
   onBack: () => void;
-  onDelete: (productId: string) => void;
+  onDelete: (index: number) => void;
 }
 
-const CategoryDetail: React.FC<Props> = ({ category, products, onBack, onDelete }) => {
+const WishlistDetail: React.FC<Props> = ({ category, images, onBack, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const navigate = useNavigate(); // ✅ 추가
-
+  const navigate = useNavigate();
   return (
     <div className="wishlist-container-category">
       <div className="wishlist-header-category">
-        <div className="wishlist-title-category">{products.length}개의 위시템</div>
+        <div className="wishlist-title-category">{images.length}개의 위시템</div>
         <div className="wishlist-actions-category">
           <button className="create-button-category" onClick={() => setIsEditing(!isEditing)}>
             {isEditing ? "완료" : "편집"}
@@ -31,23 +29,26 @@ const CategoryDetail: React.FC<Props> = ({ category, products, onBack, onDelete 
       <div className="category-hashtag">#{category}</div>
 
       <div className="wishlist-grid-category">
-        {products.map((product) => (
-          <div key={product._id} className="wishlist-image-box-category">
+        {images.map((src, idx) => (
+          <div key={idx} className="wishlist-image-box-category">
             <img
-              src={product.imageUrl}
-              alt={product.title}
+              src={src}
+              alt={`${category}-${idx}`}
               className="wishlist-image-category"
-              onClick={() => navigate(`/products/${product._id}`)} // ✅ 클릭 시 이동
-              style={{ cursor: "pointer" }} // ✅ 마우스 커서도 포인터로
+              onClick={() => {
+                if (!isEditing) {
+                  navigate(`/products/여기에-id값`); // ← id값이 있다면 넘기기
+                }
+              }}
+              style={{ cursor: isEditing ? "default" : "pointer" }}
             />
             {isEditing && (
               <img
                 src="/assets/images/delete.png"
-                alt="삭제 아이콘"
+                alt="삭제"
                 className="delete-icon-category"
                 onClick={() => {
-                  const ok = window.confirm("이 이미지를 삭제할까요?");
-                  if (ok) onDelete(product._id);
+                  if (window.confirm("삭제하시겠습니까?")) onDelete(idx);
                 }}
               />
             )}
@@ -58,4 +59,4 @@ const CategoryDetail: React.FC<Props> = ({ category, products, onBack, onDelete 
   );
 };
 
-export default CategoryDetail;
+export default WishlistDetail;

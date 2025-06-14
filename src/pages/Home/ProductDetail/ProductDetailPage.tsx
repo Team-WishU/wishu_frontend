@@ -31,7 +31,7 @@ const ProductDetailPage: React.FC = () => {
   const avatarSrc = product.uploadedBy?.profileImage?.includes("/assets")
     ? product.uploadedBy.profileImage
     : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
-
+  console.log(product.productUrl);
   return (
     <div>
       <Header />
@@ -77,9 +77,11 @@ const ProductDetailPage: React.FC = () => {
               >
                 상품 담기
               </button>
-              <button className="black-button" onClick={() => window.open(product.productUrl, "_blank")}>
-                사이트 방문
-              </button>
+              {product.productUrl && (
+                <button className="black-button" onClick={() => window.open(product.productUrl, "_blank")}>
+                  사이트 방문
+                </button>
+              )}
             </div>
             <div className="comment-section">
               <p className="comment-title">어떠셨나요?</p>

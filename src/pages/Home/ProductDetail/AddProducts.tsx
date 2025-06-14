@@ -14,6 +14,7 @@ const AddProducts = () => {
   const [title, setTitle] = useState("");
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
+  const [productUrl, setProductUrl] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const navigate = useNavigate();
   const categoryOptions = [
@@ -43,7 +44,7 @@ const AddProducts = () => {
 
   const handleSubmit = async () => {
     if (!image) return alert("이미지를 선택해주세요");
-    if (!title || !brand || !price || !category) return alert("모든 필드를 입력해주세요");
+    if (!title || !brand || !price || !category || !productUrl) return alert("모든 필드를 입력해주세요");
 
     try {
       const imageUrl = await uploadImageAndGetUrl(image);
@@ -57,7 +58,7 @@ const AddProducts = () => {
           price: Number(price),
           category,
           tags,
-          productUrl: "https://example.com",
+          productUrl,
           imageUrl,
         },
         {
@@ -192,16 +193,12 @@ const AddProducts = () => {
                   styles={selectStyle}
                   components={{ MenuList: CustomMenuList }}
                 />
-
                 <FormLabel text="상품명" />
                 <input placeholder="상품명 추가" value={title} onChange={(e) => setTitle(e.target.value)} className="formInput" />
-
                 <FormLabel text="브랜드명" />
                 <input placeholder="브랜드명 추가" value={brand} onChange={(e) => setBrand(e.target.value)} className="formInput" />
-
                 <FormLabel text="가격" />
                 <input placeholder="가격 추가" type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="formInput" />
-
                 <FormLabel text={`태그된 주제 (${tags.length}개)`} />
                 <Select
                   isMulti
@@ -211,6 +208,15 @@ const AddProducts = () => {
                   onChange={(selectedOptions) => setTags(selectedOptions.map((option) => option.value))}
                   styles={selectStyle}
                   components={{ MenuList: CustomMenuList }}
+                />
+
+                <FormLabel text="사이트" />
+                <input
+                  placeholder="사이트 주소를 입력하세요"
+                  type="url"
+                  value={productUrl}
+                  onChange={(e) => setProductUrl(e.target.value)}
+                  className="formInput"
                 />
               </div>
 

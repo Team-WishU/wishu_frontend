@@ -34,7 +34,7 @@ const SearchResultPage: React.FC = () => {
   }, [query]);
 
   const handleClick = (id: string) => {
-    navigate(`/product/${id}`);
+    navigate(`/products/${id}`); // ✅ 라우터 경로에 맞게 수정
   };
 
   const breakpointColumnsObj = {
@@ -74,11 +74,6 @@ const SearchResultPage: React.FC = () => {
                   alt={item.title}
                   className="masonry-img"
                 />
-                <div className="masonry-info">
-                  <strong>{item.title}</strong>
-                  <p>{item.brand}</p>
-                  <p>{item.price.toLocaleString()}원</p>
-                </div>
               </div>
             ))}
           </Masonry>

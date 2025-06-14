@@ -5,16 +5,17 @@ import ProductDetailPage from "../pages/Home/ProductDetail/ProductDetailPage";
 import MyPage from "../pages/Home/MyPage/MyPage";
 import AddProducts from "../pages/Home/ProductDetail/AddProducts";
 import ProfileSetting from "../pages/Setting/Profile_Setting";
-import SearchResultPage from "../pages/Home/SearchResultPage"; // 🔍 추가
+import SearchResultPage from "../pages/Home/SearchResultPage";
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/product/:id" element={<ProductDetailPage />} />
+      <Route path="/products/:id" element={<ProductDetailPage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/ProductDetail/addproducts" element={<AddProducts />} />
       <Route path="/profile-setting" element={<ProfileSetting />} />
+      <Route path="/search" element={<SearchResultPage />} />
     </Routes>
   );
 };

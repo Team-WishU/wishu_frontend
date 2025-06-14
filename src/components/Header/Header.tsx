@@ -25,6 +25,8 @@ const Header: React.FC = () => {
   const [gender, setGender] = useState("");
 
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -32,8 +34,12 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      if (
+        !menuRef.current?.contains(e.target as Node) &&
+        !(e.target as HTMLElement).closest(".suggestions")
+      ) {
         setIsMenuOpen(false);
+        setShowSuggestions(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -70,6 +76,22 @@ const Header: React.FC = () => {
   const handleSearch = () => {
     if (!searchKeyword.trim()) return;
     navigate(`/search?keyword=${encodeURIComponent(searchKeyword)}`);
+    setShowSuggestions(false);
+  };
+
+  const fetchSuggestions = async (input: string) => {
+    try {
+      if (!input.trim()) {
+        setSuggestions([]);
+        return;
+      }
+
+      const res = await api.get(`/products/autocomplete?input=${input}`);
+      setSuggestions(res.data);
+      setShowSuggestions(true);
+    } catch (err) {
+      console.error("자동완성 에러:", err);
+    }
   };
 
   return (
@@ -85,7 +107,14 @@ const Header: React.FC = () => {
             type="text"
             placeholder="아이템 검색"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchKeyword(value);
+              fetchSuggestions(value);
+            }}
+            onFocus={() => {
+              if (suggestions.length > 0) setShowSuggestions(true);
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSearch();
             }}
@@ -96,6 +125,22 @@ const Header: React.FC = () => {
             onClick={handleSearch}
             style={{ cursor: "pointer" }}
           />
+          {showSuggestions && suggestions.length > 0 && (
+            <ul className="suggestions">
+              {suggestions.map((item, idx) => (
+                <li
+                  key={idx}
+                  onClick={() => {
+                    setSearchKeyword(item);
+                    setShowSuggestions(false);
+                    navigate(`/search?keyword=${encodeURIComponent(item)}`);
+                  }}
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="profile-container-wrapper" ref={menuRef}>
@@ -141,6 +186,7 @@ const Header: React.FC = () => {
         </div>
       </div>
 
+      {/* 모달들 */}
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}

@@ -40,8 +40,8 @@ const ProductDetailPage: React.FC = () => {
         }
       );
 
-      setProduct(res.data); // 댓글 반영된 최신 product 객체로 갱신
-      setCommentText(""); // 입력창 비우기
+      setProduct(res.data);
+      setCommentText("");
     } catch (err) {
       console.error("댓글 등록 실패", err);
       alert("댓글 등록에 실패했습니다.");
@@ -149,29 +149,32 @@ const ProductDetailPage: React.FC = () => {
                 댓글 {product.comments?.length || 0}개
               </p>
 
-              {product.comments?.map((comment: any, idx: number) => {
-                const profileSrc = comment.profileImage?.includes("/assets")
-                  ? comment.profileImage
-                  : `/assets/images/Signup/${
-                      comment.profileImage || "default.png"
-                    }`;
-                return (
-                  <div className="comment-item" key={idx}>
-                    <img
-                      src={profileSrc}
-                      alt="user"
-                      className="comment-avatar"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "/assets/images/Signup/default.png";
-                      }}
-                    />
-                    <p className="comment-text">
-                      <strong>{comment.nickname}</strong> {comment.text}
-                    </p>
-                  </div>
-                );
-              })}
+              {/* 스크롤 가능 댓글 리스트 */}
+              <div className="comment-list-scroll">
+                {product.comments?.map((comment: any, idx: number) => {
+                  const profileSrc = comment.profileImage?.includes("/assets")
+                    ? comment.profileImage
+                    : `/assets/images/Signup/${
+                        comment.profileImage || "default.png"
+                      }`;
+                  return (
+                    <div className="comment-item" key={idx}>
+                      <img
+                        src={profileSrc}
+                        alt="user"
+                        className="comment-avatar"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src =
+                            "/assets/images/Signup/default.png";
+                        }}
+                      />
+                      <p className="comment-text">
+                        <strong>{comment.nickname}</strong> {comment.text}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

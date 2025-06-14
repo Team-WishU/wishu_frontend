@@ -21,7 +21,7 @@ const AddProducts = () => {
     { value: "상의", label: "상의" },
     { value: "하의", label: "하의" },
     { value: "신발", label: "신발" },
-    { value: "악세사리", label: "악세사리" },
+    { value: "액세서리", label: "액세서리" },
     { value: "폰케이스", label: "폰케이스" },
   ];
 

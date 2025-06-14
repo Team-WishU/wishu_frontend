@@ -11,6 +11,7 @@ interface UserContextType {
   isLoggedIn: boolean;
   login: (user: UserInfo) => void;
   logout: () => void;
+  withdraw: () => void;
 }
 
 const defaultUser = { name: "", email: "", avatar: "" };
@@ -20,15 +21,22 @@ const UserContext = createContext<UserContextType>({
   isLoggedIn: false,
   login: () => {},
   logout: () => {},
+  withdraw: () => {},
 });
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const API_BASE = process.env.REACT_APP_API_URL;
+
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<UserInfo>(defaultUser);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const formatAvatar = (avatar: string) => {
     if (!avatar) return "";
-    return avatar.includes("/assets") ? avatar : `/assets/images/Signup/${avatar}`;
+    return avatar.includes("/assets")
+      ? avatar
+      : `/assets/images/Signup/${avatar}`;
   };
 
   useEffect(() => {
@@ -85,8 +93,35 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.dispatchEvent(new Event("userUpdated"));
   };
 
+  // 회원탈퇴
+  const withdraw = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/withdraw`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "회원 탈퇴 실패");
+      }
+
+      setUser(defaultUser);
+      setIsLoggedIn(false);
+      localStorage.clear();
+      window.dispatchEvent(new Event("userUpdated"));
+    } catch (err: any) {
+      console.error("회원 탈퇴 실패:", err.message);
+      alert("회원 탈퇴 중 오류 발생: " + err.message);
+      throw err;
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, isLoggedIn, login, logout }}>
+    <UserContext.Provider value={{ user, isLoggedIn, login, logout, withdraw }}>
       {children}
     </UserContext.Provider>
   );

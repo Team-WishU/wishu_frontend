@@ -10,6 +10,7 @@ const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -26,12 +27,34 @@ const ProductDetailPage: React.FC = () => {
     fetchProduct();
   }, [id]);
 
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return alert("댓글을 입력해주세요");
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const res = await axios.post(
+        `${API_BASE}/products/${id}/comments`,
+        { text: commentText },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setProduct(res.data); // 댓글 반영된 최신 product 객체로 갱신
+      setCommentText(""); // 입력창 비우기
+    } catch (err) {
+      console.error("댓글 등록 실패", err);
+      alert("댓글 등록에 실패했습니다.");
+    }
+  };
+
   if (loading) return <div>로딩 중...</div>;
   if (!product) return <div>상품을 찾을 수 없습니다.</div>;
+
   const avatarSrc = product.uploadedBy?.profileImage?.includes("/assets")
     ? product.uploadedBy.profileImage
     : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
-  console.log(product.productUrl);
+
   return (
     <div>
       <Header />
@@ -56,7 +79,8 @@ const ProductDetailPage: React.FC = () => {
 
           {/* 정보 영역 */}
           <div className="product-info-section">
-            <h1 className="product-brand">{product.brand}</h1> <hr className="divider" />
+            <h1 className="product-brand">{product.brand}</h1>
+            <hr className="divider" />
             <h1 className="product-title">{product.title}</h1>
             <p className="product-desc">{product.description || ""}</p>
             <p className="product-price">{product.price.toLocaleString()}원</p>
@@ -66,6 +90,7 @@ const ProductDetailPage: React.FC = () => {
                 <span key={idx}>#{tag}</span>
               ))}
             </div>
+
             <div className="product-buttons">
               <button
                 className="black-button"
@@ -83,24 +108,53 @@ const ProductDetailPage: React.FC = () => {
                 </button>
               )}
             </div>
+
+            {/* 댓글 영역 */}
             <div className="comment-section">
               <p className="comment-title">어떠셨나요?</p>
 
               <div className="comment-input-wrapper">
-                <input type="text" placeholder="댓글을 추가하고 대화를 시작하세요." className="comment-input" />
-                <img src="/assets/images/productdetail/enter.png" alt="입력" className="comment-send-icon" />
+                <input
+                  type="text"
+                  placeholder="댓글을 추가하고 대화를 시작하세요."
+                  className="comment-input"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleAddComment();
+                  }}
+                />
+                <img
+                  src="/assets/images/productdetail/enter.png"
+                  alt="입력"
+                  className="comment-send-icon"
+                  onClick={handleAddComment}
+                  style={{ cursor: "pointer" }}
+                />
               </div>
 
               <p className="comment-count">댓글 {product.comments?.length || 0}개</p>
 
-              {product.comments?.map((comment: any, idx: number) => (
-                <div className="comment-item" key={idx}>
-                  <img src={comment.profileImage} alt="user" className="comment-avatar" />
-                  <p className="comment-text">
-                    <strong>{comment.nickname}</strong> {comment.text}
-                  </p>
-                </div>
-              ))}
+              {product.comments?.map((comment: any, idx: number) => {
+                const profileSrc = comment.profileImage?.includes("/assets")
+                  ? comment.profileImage
+                  : `/assets/images/Signup/${comment.profileImage || "default.png"}`;
+                return (
+                  <div className="comment-item" key={idx}>
+                    <img
+                      src={profileSrc}
+                      alt="user"
+                      className="comment-avatar"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
+                      }}
+                    />
+                    <p className="comment-text">
+                      <strong>{comment.nickname}</strong> {comment.text}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

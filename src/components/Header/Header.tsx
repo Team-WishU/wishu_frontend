@@ -24,6 +24,8 @@ const Header: React.FC = () => {
   const [birth, setBirth] = useState("");
   const [gender, setGender] = useState("");
 
+  const [searchKeyword, setSearchKeyword] = useState("");
+
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
   const { user, isLoggedIn, login, logout } = useUser();
@@ -61,7 +63,14 @@ const Header: React.FC = () => {
   }, [isLoggedIn, logout]);
 
   const defaultAvatar = "/assets/images/Signup/default.png";
-  const avatarSrc = user.avatar?.includes("/assets") ? user.avatar : `/assets/images/Signup/${user.avatar || "default.png"}`;
+  const avatarSrc = user.avatar?.includes("/assets")
+    ? user.avatar
+    : `/assets/images/Signup/${user.avatar || "default.png"}`;
+
+  const handleSearch = () => {
+    if (!searchKeyword.trim()) return;
+    navigate(`/search?keyword=${encodeURIComponent(searchKeyword)}`);
+  };
 
   return (
     <header className="header">
@@ -72,13 +81,29 @@ const Header: React.FC = () => {
         </div>
 
         <div className="search-container">
-          <input type="text" placeholder="아이템 검색" />
-          <img src="/assets/icons/search.svg" alt="Search Icon" />
+          <input
+            type="text"
+            placeholder="아이템 검색"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+          />
+          <img
+            src="/assets/icons/search.svg"
+            alt="Search Icon"
+            onClick={handleSearch}
+            style={{ cursor: "pointer" }}
+          />
         </div>
 
         <div className="profile-container-wrapper" ref={menuRef}>
           {!isLoggedIn ? (
-            <button onClick={() => setLoginModalOpen(true)} className="loginbtn">
+            <button
+              onClick={() => setLoginModalOpen(true)}
+              className="loginbtn"
+            >
               로그인
             </button>
           ) : (
@@ -89,7 +114,11 @@ const Header: React.FC = () => {
                     src={avatarSrc}
                     alt="avatar"
                     className="avatar-img"
-                    style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "50%",
+                    }}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = defaultAvatar;
                     }}

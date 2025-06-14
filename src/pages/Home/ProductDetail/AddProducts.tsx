@@ -4,7 +4,7 @@ import Select, { components } from "react-select";
 import { uploadImageAndGetUrl } from "../../../../src/firebase/upload";
 import axios from "axios";
 import "../../../styles/AddProducts.css";
-
+import { Navigate, useNavigate } from "react-router-dom";
 const API_BASE = process.env.REACT_APP_API_URL;
 
 const AddProducts = () => {
@@ -15,7 +15,7 @@ const AddProducts = () => {
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-
+  const navigate = useNavigate();
   const categoryOptions = [
     { value: "상의", label: "상의" },
     { value: "하의", label: "하의" },
@@ -47,7 +47,7 @@ const AddProducts = () => {
 
     try {
       const imageUrl = await uploadImageAndGetUrl(image);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
 
       const res = await axios.post(
         `${API_BASE}/products`,
@@ -69,6 +69,7 @@ const AddProducts = () => {
 
       alert("상품 등록 완료");
       console.log(res.data);
+      navigate(`/products/${res.data.data.id}`);
     } catch (err: any) {
       console.error("상품 등록 오류:", err?.response?.data || err);
       alert("상품 등록 실패");
@@ -80,14 +81,16 @@ const AddProducts = () => {
     return (
       <components.MenuList {...props}>
         {props.children}
-        <div style={{
-          padding: "12px",
-          fontSize: "13px",
-          color: "#bbb",
-          borderTop: "1px solid #eee",
-          textAlign: "center",
-          whiteSpace: "pre-line",
-        }}>
+        <div
+          style={{
+            padding: "12px",
+            fontSize: "13px",
+            color: "#bbb",
+            borderTop: "1px solid #eee",
+            textAlign: "center",
+            whiteSpace: "pre-line",
+          }}
+        >
           {isTag ? "태그 선택하기" : "카테고리 선택하기"}
         </div>
       </components.MenuList>
@@ -169,18 +172,14 @@ const AddProducts = () => {
                 <div className="imageUploadContent">
                   <div className="plusIcon">＋</div>
                   <div className="imageInstruction">
-                    파일을 선택하거나<br />여기로 끌어다 놓으세요.
+                    파일을 선택하거나
+                    <br />
+                    여기로 끌어다 놓으세요.
                   </div>
                 </div>
               )}
             </label>
-            <input
-              id="imageUpload"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              hidden
-            />
+            <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} hidden />
 
             <div className="formRight">
               <div className="formInner">
@@ -195,29 +194,13 @@ const AddProducts = () => {
                 />
 
                 <FormLabel text="상품명" />
-                <input
-                  placeholder="상품명 추가"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="formInput"
-                />
+                <input placeholder="상품명 추가" value={title} onChange={(e) => setTitle(e.target.value)} className="formInput" />
 
                 <FormLabel text="브랜드명" />
-                <input
-                  placeholder="브랜드명 추가"
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  className="formInput"
-                />
+                <input placeholder="브랜드명 추가" value={brand} onChange={(e) => setBrand(e.target.value)} className="formInput" />
 
                 <FormLabel text="가격" />
-                <input
-                  placeholder="가격 추가"
-                  type="number"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="formInput"
-                />
+                <input placeholder="가격 추가" type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="formInput" />
 
                 <FormLabel text={`태그된 주제 (${tags.length}개)`} />
                 <Select
@@ -225,9 +208,7 @@ const AddProducts = () => {
                   options={tagOptions}
                   placeholder="태그 선택하기"
                   value={tagOptions.filter((option) => tags.includes(option.value))}
-                  onChange={(selectedOptions) =>
-                    setTags(selectedOptions.map((option) => option.value))
-                  }
+                  onChange={(selectedOptions) => setTags(selectedOptions.map((option) => option.value))}
                   styles={selectStyle}
                   components={{ MenuList: CustomMenuList }}
                 />
@@ -246,8 +227,6 @@ const AddProducts = () => {
   );
 };
 
-const FormLabel = ({ text }: { text: string }) => (
-  <label className="formLabel">{text}</label>
-);
+const FormLabel = ({ text }: { text: string }) => <label className="formLabel">{text}</label>;
 
 export default AddProducts;

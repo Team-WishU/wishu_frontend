@@ -28,6 +28,9 @@ const ProductDetailPage: React.FC = () => {
 
   if (loading) return <div>로딩 중...</div>;
   if (!product) return <div>상품을 찾을 수 없습니다.</div>;
+  const avatarSrc = product.uploadedBy?.profileImage?.includes("/assets")
+    ? product.uploadedBy.profileImage
+    : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
 
   return (
     <div>
@@ -39,25 +42,30 @@ const ProductDetailPage: React.FC = () => {
             <div className="category-hash">#{product.category}</div>
             <img src={product.imageUrl} alt="product" className="product-image" />
             <div className="product-writer">
-              <img src={product.uploadedBy?.profileImage} alt="작성자" className="writer-avatar" />
+              <img
+                src={avatarSrc}
+                alt="작성자"
+                className="writer-avatar"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
+                }}
+              />
               <span className="writer-name">{product.uploadedBy?.nickname}</span>
             </div>
           </div>
 
           {/* 정보 영역 */}
           <div className="product-info-section">
+            <h1 className="product-brand">{product.brand}</h1> <hr className="divider" />
             <h1 className="product-title">{product.title}</h1>
-            <hr className="divider" />
             <p className="product-desc">{product.description || ""}</p>
             <p className="product-price">{product.price.toLocaleString()}원</p>
             <hr className="divider" />
-
             <div className="product-tags">
               {product.tags?.map((tag: string, idx: number) => (
                 <span key={idx}>#{tag}</span>
               ))}
             </div>
-
             <div className="product-buttons">
               <button
                 className="black-button"
@@ -73,7 +81,6 @@ const ProductDetailPage: React.FC = () => {
                 사이트 방문
               </button>
             </div>
-
             <div className="comment-section">
               <p className="comment-title">어떠셨나요?</p>
 

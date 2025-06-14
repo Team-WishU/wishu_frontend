@@ -15,7 +15,6 @@ const AppRouter = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/ProductDetail/addproducts" element={<AddProducts />} />
       <Route path="/profile-setting" element={<ProfileSetting />} />
-      <Route path="/search" element={<SearchResultPage />} />
     </Routes>
   );
 };

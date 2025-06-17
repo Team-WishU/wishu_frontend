@@ -89,3 +89,46 @@
   font-size: 14px;
   color: #5c5c5c;
 }
+
+.wishlist-masonry-grid {
+  display: flex;
+  margin-left: -16px; /* gutter */
+  width: 80%;
+}
+
+.wishlist-masonry-grid-column {
+  padding-left: 16px;
+  background-clip: padding-box;
+}
+
+.wishlist-masonry-item {
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.wishlist-image-category {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.category-masonry-grid {
+  display: flex;
+  width: 80%;
+  margin-left: -16px;
+}
+
+.category-masonry-grid-column {
+  padding-left: 16px;
+  background-clip: padding-box;
+}
+
+.category-masonry-item {
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+}

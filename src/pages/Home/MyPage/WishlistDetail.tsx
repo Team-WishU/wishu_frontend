@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Product } from "./MyProducts"; // ✅ 같은 타입 재사용
+import Masonry from "react-masonry-css";
+import { Product } from "./MyProducts";
 import "../../../styles/Mypage/CategoryDetail.css";
 
 interface Props {
@@ -13,6 +14,13 @@ interface Props {
 const WishlistDetail: React.FC<Props> = ({ category, products, onBack, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+
+  const breakpointColumnsObj = {
+    default: 4,
+    1200: 3,
+    768: 2,
+    480: 1,
+  };
 
   return (
     <div className="wishlist-container-category">
@@ -30,9 +38,13 @@ const WishlistDetail: React.FC<Props> = ({ category, products, onBack, onDelete 
 
       <div className="category-hashtag">#{category}</div>
 
-      <div className="wishlist-grid-category">
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="wishlist-masonry-grid"
+        columnClassName="wishlist-masonry-grid-column"
+      >
         {products.map((product) => (
-          <div key={product._id} className="wishlist-image-box-category">
+          <div key={product._id} className="wishlist-masonry-item">
             <img
               src={product.imageUrl}
               alt={product.title}
@@ -55,7 +67,7 @@ const WishlistDetail: React.FC<Props> = ({ category, products, onBack, onDelete 
             )}
           </div>
         ))}
-      </div>
+      </Masonry>
     </div>
   );
 };

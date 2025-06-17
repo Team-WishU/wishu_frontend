@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
+import { useNavigate } from "react-router-dom";
+import Masonry from "react-masonry-css";
 import { Product } from "./MyProducts";
 import "../../../styles/Mypage/CategoryDetail.css";
 
@@ -12,7 +13,14 @@ interface Props {
 
 const CategoryDetail: React.FC<Props> = ({ category, products, onBack, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const navigate = useNavigate(); // ✅ 추가
+  const navigate = useNavigate();
+
+  const breakpointColumnsObj = {
+    default: 4,
+    1200: 3,
+    768: 2,
+    480: 1,
+  };
 
   return (
     <div className="wishlist-container-category">
@@ -30,15 +38,21 @@ const CategoryDetail: React.FC<Props> = ({ category, products, onBack, onDelete 
 
       <div className="category-hashtag">#{category}</div>
 
-      <div className="wishlist-grid-category">
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="category-masonry-grid"
+        columnClassName="category-masonry-grid-column"
+      >
         {products.map((product) => (
-          <div key={product._id} className="wishlist-image-box-category">
+          <div key={product._id} className="category-masonry-item">
             <img
               src={product.imageUrl}
               alt={product.title}
               className="wishlist-image-category"
-              onClick={() => navigate(`/products/${product._id}`)} // ✅ 클릭 시 이동
-              style={{ cursor: "pointer" }} // ✅ 마우스 커서도 포인터로
+              onClick={() => {
+                if (!isEditing) navigate(`/products/${product._id}`);
+              }}
+              style={{ cursor: isEditing ? "default" : "pointer" }}
             />
             {isEditing && (
               <img
@@ -53,7 +67,7 @@ const CategoryDetail: React.FC<Props> = ({ category, products, onBack, onDelete 
             )}
           </div>
         ))}
-      </div>
+      </Masonry>
     </div>
   );
 };

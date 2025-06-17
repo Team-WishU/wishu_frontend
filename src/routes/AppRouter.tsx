@@ -12,8 +12,9 @@ const AppRouter = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/products/:id" element={<ProductDetailPage />} />
+      <Route path="/products/add" element={<AddProducts />} />
+      <Route path="/products/:id/edit" element={<AddProducts />} />
       <Route path="/mypage" element={<MyPage />} />
-      <Route path="/ProductDetail/addproducts" element={<AddProducts />} />
       <Route path="/profile-setting" element={<ProfileSetting />} />
       <Route path="/search" element={<SearchResultPage />} />
     </Routes>

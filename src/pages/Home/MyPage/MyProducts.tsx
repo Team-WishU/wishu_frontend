@@ -23,7 +23,9 @@ interface CategoryGroup {
 const MyProducts: React.FC = () => {
   const [groupedData, setGroupedData] = useState<CategoryGroup[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(
+    null
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,7 +76,9 @@ const MyProducts: React.FC = () => {
       // 2. 선택된 그룹 내에서 삭제된 상품 제거
       if (!selectedGroup) return;
 
-      const updatedProducts = selectedGroup.products.filter((p) => p._id !== productId);
+      const updatedProducts = selectedGroup.products.filter(
+        (p) => p._id !== productId
+      );
       const updatedGroup = {
         ...selectedGroup,
         products: updatedProducts,
@@ -83,7 +87,11 @@ const MyProducts: React.FC = () => {
       };
 
       // 3. 전체 그룹 리스트에서도 해당 그룹을 업데이트
-      setGroupedData((prev) => prev.map((group) => (group.name === updatedGroup.name ? updatedGroup : group)));
+      setGroupedData((prev) =>
+        prev.map((group) =>
+          group.name === updatedGroup.name ? updatedGroup : group
+        )
+      );
 
       // 4. 현재 선택된 그룹 상태도 갱신
       setSelectedGroup(updatedGroup);
@@ -93,7 +101,9 @@ const MyProducts: React.FC = () => {
   };
 
   const handleDeleteCategory = async (categoryName: string) => {
-    const confirmDelete = window.confirm(`'${categoryName}' 카테고리의 모든 위시템을 삭제할까요?`);
+    const confirmDelete = window.confirm(
+      `'${categoryName}' 카테고리의 모든 위시템을 삭제할까요?`
+    );
     if (!confirmDelete) return;
 
     try {
@@ -104,7 +114,9 @@ const MyProducts: React.FC = () => {
         },
       });
 
-      setGroupedData((prev) => prev.filter((group) => group.name !== categoryName));
+      setGroupedData((prev) =>
+        prev.filter((group) => group.name !== categoryName)
+      );
       if (selectedGroup?.name === categoryName) {
         setSelectedGroup(null);
       }
@@ -117,7 +129,12 @@ const MyProducts: React.FC = () => {
 
   if (selectedGroup) {
     return (
-      <CategoryDetail category={selectedGroup.name} products={selectedGroup.products} onBack={() => setSelectedGroup(null)} onDelete={handleDelete} />
+      <CategoryDetail
+        category={selectedGroup.name}
+        products={selectedGroup.products}
+        onBack={() => setSelectedGroup(null)}
+        onDelete={handleDelete}
+      />
     );
   }
 
@@ -126,10 +143,16 @@ const MyProducts: React.FC = () => {
       <div className="product-header">
         <div className="product-title">{totalCount}개의 위시템</div>
         <div className="product-actions">
-          <button className="product-button" onClick={() => navigate("/ProductDetail/addproducts")}>
+          <button
+            className="product-button"
+            onClick={() => navigate("/products/add")}
+          >
             + 위시템 작성
           </button>
-          <button className="product-button" onClick={() => setIsEditing(!isEditing)}>
+          <button
+            className="product-button"
+            onClick={() => setIsEditing(!isEditing)}
+          >
             {isEditing ? "완료" : "편집"}
           </button>
         </div>
@@ -146,9 +169,16 @@ const MyProducts: React.FC = () => {
                   onClick={() => {
                     if (!isEditing) setSelectedGroup(group);
                   }}
-                  style={{ cursor: isEditing ? "default" : "pointer", position: "relative" }}
+                  style={{
+                    cursor: isEditing ? "default" : "pointer",
+                    position: "relative",
+                  }}
                 >
-                  <img src={src} alt={`${group.name}-${idx}`} className="product-image" />
+                  <img
+                    src={src}
+                    alt={`${group.name}-${idx}`}
+                    className="product-image"
+                  />
                   {isEditing && idx === group.images.length - 1 && (
                     <img
                       src="/assets/images/delete.png"

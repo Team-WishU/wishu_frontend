@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../../components/Header/Header";
+import { useUser } from "../../../context/UserContext";
 import "../../../styles/ProductDetailPage.css";
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useUser(); // 사용자 정보 가져오기
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState("");
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/products/${id}`);
-        setProduct(res.data);
-      } catch (error) {
-        console.error("상품 조회 실패:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchProduct = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/products/${id}`);
+      setProduct(res.data);
+    } catch (error) {
+      console.error("상품 조회 실패:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProduct();
   }, [id]);
 
@@ -53,7 +56,11 @@ const ProductDetailPage: React.FC = () => {
 
   const avatarSrc = product.uploadedBy?.profileImage?.includes("/assets")
     ? product.uploadedBy.profileImage
-    : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
+    : `/assets/images/Signup/${
+        product.uploadedBy?.profileImage || "default.png"
+      }`;
+
+  const isMyPost = user.name === product.uploadedBy?.nickname; // ✅ 로그인 유저와 비교
 
   return (
     <div>
@@ -63,22 +70,40 @@ const ProductDetailPage: React.FC = () => {
           {/* 이미지 영역 */}
           <div className="product-image-section">
             <div className="category-hash">#{product.category}</div>
-            <img src={product.imageUrl} alt="product" className="product-image" />
+            <img
+              src={product.imageUrl}
+              alt="product"
+              className="product-image"
+            />
             <div className="product-writer">
               <img
                 src={avatarSrc}
                 alt="작성자"
                 className="writer-avatar"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
+                  (e.target as HTMLImageElement).src =
+                    "/assets/images/Signup/default.png";
                 }}
               />
-              <span className="writer-name">{product.uploadedBy?.nickname}</span>
+              <span className="writer-name">
+                {product.uploadedBy?.nickname}
+              </span>
             </div>
           </div>
 
           {/* 정보 영역 */}
           <div className="product-info-section">
+            {isMyPost && (
+              <div className="edit-button-wrapper">
+                <button
+                  className="black-button"
+                  onClick={() => navigate(`/products/${product._id}/edit`)}
+                >
+                  수정
+                </button>
+              </div>
+            )}
+
             <h1 className="product-brand">{product.brand}</h1>
             <hr className="divider" />
             <h1 className="product-title">{product.title}</h1>
@@ -119,7 +144,10 @@ const ProductDetailPage: React.FC = () => {
                 상품 담기
               </button>
               {product.productUrl && (
-                <button className="black-button" onClick={() => window.open(product.productUrl, "_blank")}>
+                <button
+                  className="black-button"
+                  onClick={() => window.open(product.productUrl, "_blank")}
+                >
                   사이트 방문
                 </button>
               )}
@@ -149,14 +177,17 @@ const ProductDetailPage: React.FC = () => {
                 />
               </div>
 
-              <p className="comment-count">댓글 {product.comments?.length || 0}개</p>
+              <p className="comment-count">
+                댓글 {product.comments?.length || 0}개
+              </p>
 
-              {/* 스크롤 가능 댓글 리스트 */}
               <div className="comment-list-scroll">
                 {product.comments?.map((comment: any, idx: number) => {
                   const profileSrc = comment.profileImage?.includes("/assets")
                     ? comment.profileImage
-                    : `/assets/images/Signup/${comment.profileImage || "default.png"}`;
+                    : `/assets/images/Signup/${
+                        comment.profileImage || "default.png"
+                      }`;
                   return (
                     <div className="comment-item" key={idx}>
                       <img
@@ -164,7 +195,8 @@ const ProductDetailPage: React.FC = () => {
                         alt="user"
                         className="comment-avatar"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
+                          (e.target as HTMLImageElement).src =
+                            "/assets/images/Signup/default.png";
                         }}
                       />
                       <p className="comment-text">

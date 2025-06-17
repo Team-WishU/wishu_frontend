@@ -4,10 +4,15 @@ import Select, { components } from "react-select";
 import { uploadImageAndGetUrl } from "../../../../src/firebase/upload";
 import axios from "axios";
 import "../../../styles/AddProducts.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
 const API_BASE = process.env.REACT_APP_API_URL;
 
 const AddProducts = () => {
+  const { id } = useParams<{ id?: string }>();
+  const isEditMode = Boolean(id);
+  const navigate = useNavigate();
+
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [category, setCategory] = useState("");
@@ -16,7 +21,6 @@ const AddProducts = () => {
   const [price, setPrice] = useState("");
   const [productUrl, setProductUrl] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const navigate = useNavigate();
 
   const categoryOptions = [
     { value: "상의", label: "상의" },
@@ -26,7 +30,10 @@ const AddProducts = () => {
     { value: "폰케이스", label: "폰케이스" },
   ];
 
-  const tagOptionsByCategory: Record<string, { value: string; label: string }[]> = {
+  const tagOptionsByCategory: Record<
+    string,
+    { value: string; label: string }[]
+  > = {
     상의: [
       { value: "스트릿", label: "스트릿" },
       { value: "심플", label: "심플" },
@@ -88,8 +95,34 @@ const AddProducts = () => {
   const currentTagOptions = tagOptionsByCategory[category] || [];
 
   useEffect(() => {
-    setTags([]); // 카테고리 변경 시 태그 초기화
+    setTags([]);
   }, [category]);
+
+  useEffect(() => {
+    if (isEditMode) {
+      const fetchProduct = async () => {
+        try {
+          const token = localStorage.getItem("accessToken");
+          const res = await axios.get(`${API_BASE}/products/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const data = res.data;
+          setTitle(data.title);
+          setBrand(data.brand);
+          setPrice(data.price.toString());
+          setCategory(data.category);
+          setTags(data.tags);
+          setProductUrl(data.productUrl);
+          setImagePreview(data.imageUrl);
+        } catch (error) {
+          console.error("상품 정보 불러오기 실패", error);
+        }
+      };
+
+      fetchProduct();
+    }
+  }, [id]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -100,36 +133,43 @@ const AddProducts = () => {
   };
 
   const handleSubmit = async () => {
-    if (!image) return alert("이미지를 선택해주세요");
-    if (!title || !brand || !price || !category || !productUrl) return alert("모든 필드를 입력해주세요");
+    if (!title || !brand || !price || !category || !productUrl)
+      return alert("모든 필드를 입력해주세요");
 
     try {
-      const imageUrl = await uploadImageAndGetUrl(image);
       const token = localStorage.getItem("accessToken");
+      let imageUrl = imagePreview;
 
-      const res = await axios.post(
-        `${API_BASE}/products`,
-        {
-          title,
-          brand,
-          price: Number(price),
-          category,
-          tags,
-          productUrl,
-          imageUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (image) {
+        imageUrl = await uploadImageAndGetUrl(image);
+      }
 
-      alert("상품 등록 완료");
-      navigate(`/products/${res.data.data.id}`);
+      const payload = {
+        title,
+        brand,
+        price: Number(price),
+        category,
+        tags,
+        productUrl,
+        imageUrl,
+      };
+
+      if (isEditMode) {
+        await axios.put(`${API_BASE}/products/${id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("상품이 수정되었습니다.");
+        navigate(`/products/${id}`);
+      } else {
+        const res = await axios.post(`${API_BASE}/products`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("상품 등록 완료");
+        navigate(`/products/${res.data.data.id}`);
+      }
     } catch (err: any) {
-      console.error("상품 등록 오류:", err?.response?.data || err);
-      alert("상품 등록 실패");
+      console.error("요청 실패:", err?.response?.data || err);
+      alert(isEditMode ? "상품 수정 실패" : "상품 등록 실패");
     }
   };
 
@@ -211,7 +251,9 @@ const AddProducts = () => {
       <Header />
       <div className="container">
         <div className="headingWrapper">
-          <h2 className="heading">위시템 작성</h2>
+          <h2 className="heading">
+            {isEditMode ? "위시템 수정" : "위시템 작성"}
+          </h2>
           <hr className="separator" />
         </div>
 
@@ -241,7 +283,13 @@ const AddProducts = () => {
                 </div>
               )}
             </label>
-            <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} hidden />
+            <input
+              id="imageUpload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              hidden
+            />
 
             <div className="formRight">
               <div className="formInner">
@@ -255,18 +303,38 @@ const AddProducts = () => {
                   components={{ MenuList: CustomMenuList }}
                 />
                 <FormLabel text="상품명" />
-                <input placeholder="상품명 추가" value={title} onChange={(e) => setTitle(e.target.value)} className="formInput" />
+                <input
+                  placeholder="상품명 추가"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="formInput"
+                />
                 <FormLabel text="브랜드명" />
-                <input placeholder="브랜드명 추가" value={brand} onChange={(e) => setBrand(e.target.value)} className="formInput" />
+                <input
+                  placeholder="브랜드명 추가"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  className="formInput"
+                />
                 <FormLabel text="가격" />
-                <input placeholder="가격 추가" type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="formInput" />
+                <input
+                  placeholder="가격 추가"
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="formInput"
+                />
                 <FormLabel text={`태그된 주제 (${tags.length}개)`} />
                 <Select
                   isMulti
                   options={currentTagOptions}
                   placeholder="태그 선택하기"
-                  value={currentTagOptions.filter((option) => tags.includes(option.value))}
-                  onChange={(selectedOptions) => setTags(selectedOptions.map((option) => option.value))}
+                  value={currentTagOptions.filter((option) =>
+                    tags.includes(option.value)
+                  )}
+                  onChange={(selectedOptions) =>
+                    setTags(selectedOptions.map((option) => option.value))
+                  }
                   styles={selectStyle}
                   components={{ MenuList: CustomMenuList }}
                 />
@@ -282,7 +350,7 @@ const AddProducts = () => {
 
               <div className="submitWrapper">
                 <button onClick={handleSubmit} className="submitBtn">
-                  게시
+                  {isEditMode ? "수정 완료" : "게시"}
                 </button>
               </div>
             </div>
@@ -293,6 +361,8 @@ const AddProducts = () => {
   );
 };
 
-const FormLabel = ({ text }: { text: string }) => <label className="formLabel">{text}</label>;
+const FormLabel = ({ text }: { text: string }) => (
+  <label className="formLabel">{text}</label>
+);
 
 export default AddProducts;

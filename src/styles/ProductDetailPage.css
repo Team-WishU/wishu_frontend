@@ -40,7 +40,7 @@
 }
 
 .writer-avatar {
-  width: 40;
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 6px;
@@ -57,11 +57,13 @@
   justify-content: center;
   gap: 8px;
 }
+
 .product-brand {
   font-size: 35px;
   font-weight: 700;
   margin-bottom: 0;
 }
+
 .product-title {
   font-size: 24px;
   font-weight: bold;
@@ -116,7 +118,6 @@
   cursor: pointer;
 }
 
-/* 댓글 영역 */
 .comment-section {
   margin-top: 40px;
 }
@@ -165,10 +166,12 @@
 .comment-list-scroll::-webkit-scrollbar {
   width: 6px;
 }
+
 .comment-list-scroll::-webkit-scrollbar-thumb {
   background-color: #ccc;
   border-radius: 3px;
 }
+
 .comment-list-scroll::-webkit-scrollbar-track {
   background-color: #f2f2f2;
 }
@@ -189,4 +192,22 @@
 .comment-text {
   font-size: 15px;
   color: #333;
+}
+
+.edit-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.edit-button-wrapper .black-button {
+  background-color: #f0f0f0; /* 연한 회색 배경 */
+  color: #505050; /* 진한 회색 텍스트 */
+  width: auto;
+  height: 36px;
+  padding: 6px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }

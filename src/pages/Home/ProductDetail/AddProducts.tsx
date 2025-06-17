@@ -26,7 +26,10 @@ const AddProducts = () => {
     { value: "폰케이스", label: "폰케이스" },
   ];
 
-  const tagOptionsByCategory: Record<string, { value: string; label: string }[]> = {
+  const tagOptionsByCategory: Record<
+    string,
+    { value: string; label: string }[]
+  > = {
     상의: [
       { value: "스트릿", label: "스트릿" },
       { value: "심플", label: "심플" },
@@ -101,7 +104,8 @@ const AddProducts = () => {
 
   const handleSubmit = async () => {
     if (!image) return alert("이미지를 선택해주세요");
-    if (!title || !brand || !price || !category || !productUrl) return alert("모든 필드를 입력해주세요");
+    if (!title || !brand || !price || !category || !productUrl)
+      return alert("모든 필드를 입력해주세요");
 
     try {
       const imageUrl = await uploadImageAndGetUrl(image);
@@ -241,7 +245,13 @@ const AddProducts = () => {
                 </div>
               )}
             </label>
-            <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} hidden />
+            <input
+              id="imageUpload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              hidden
+            />
 
             <div className="formRight">
               <div className="formInner">
@@ -255,18 +265,38 @@ const AddProducts = () => {
                   components={{ MenuList: CustomMenuList }}
                 />
                 <FormLabel text="상품명" />
-                <input placeholder="상품명 추가" value={title} onChange={(e) => setTitle(e.target.value)} className="formInput" />
+                <input
+                  placeholder="상품명 추가"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="formInput"
+                />
                 <FormLabel text="브랜드명" />
-                <input placeholder="브랜드명 추가" value={brand} onChange={(e) => setBrand(e.target.value)} className="formInput" />
+                <input
+                  placeholder="브랜드명 추가"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  className="formInput"
+                />
                 <FormLabel text="가격" />
-                <input placeholder="가격 추가" type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="formInput" />
+                <input
+                  placeholder="가격 추가"
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="formInput"
+                />
                 <FormLabel text={`태그된 주제 (${tags.length}개)`} />
                 <Select
                   isMulti
                   options={currentTagOptions}
                   placeholder="태그 선택하기"
-                  value={currentTagOptions.filter((option) => tags.includes(option.value))}
-                  onChange={(selectedOptions) => setTags(selectedOptions.map((option) => option.value))}
+                  value={currentTagOptions.filter((option) =>
+                    tags.includes(option.value)
+                  )}
+                  onChange={(selectedOptions) =>
+                    setTags(selectedOptions.map((option) => option.value))
+                  }
                   styles={selectStyle}
                   components={{ MenuList: CustomMenuList }}
                 />
@@ -293,6 +323,8 @@ const AddProducts = () => {
   );
 };
 
-const FormLabel = ({ text }: { text: string }) => <label className="formLabel">{text}</label>;
+const FormLabel = ({ text }: { text: string }) => (
+  <label className="formLabel">{text}</label>
+);
 
 export default AddProducts;

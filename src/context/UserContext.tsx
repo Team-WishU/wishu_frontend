@@ -4,6 +4,7 @@ interface UserInfo {
   name: string;
   email: string;
   avatar: string;
+  nickname?: string; // 추가
 }
 
 interface UserContextType {
@@ -14,7 +15,7 @@ interface UserContextType {
   withdraw: () => void;
 }
 
-const defaultUser = { name: "", email: "", avatar: "" };
+const defaultUser: UserInfo = { name: "", email: "", avatar: "", nickname: "" };
 
 const UserContext = createContext<UserContextType>({
   user: defaultUser,
@@ -49,6 +50,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         name: parsed.nickname || parsed.name || "",
         email: parsed.email,
         avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
+        nickname: parsed.nickname || "", // 추가
       });
       setIsLoggedIn(true);
     }
@@ -65,6 +67,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           name: parsed.nickname || parsed.name || "",
           email: parsed.email,
           avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
+          nickname: parsed.nickname || "", // 추가
         });
         setIsLoggedIn(true);
       }
@@ -93,7 +96,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     window.dispatchEvent(new Event("userUpdated"));
   };
 
-  // 회원탈퇴
   const withdraw = async () => {
     try {
       const res = await fetch(`${API_BASE}/auth/withdraw`, {

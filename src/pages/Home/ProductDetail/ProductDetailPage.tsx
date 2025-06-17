@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../../components/Header/Header";
+import { useUser } from "../../../context/UserContext";
 import "../../../styles/ProductDetailPage.css";
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -9,12 +10,10 @@ const API_BASE = process.env.REACT_APP_API_URL;
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useUser(); // 사용자 정보 가져오기
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState("");
-  const [currentUserNickname, setCurrentUserNickname] = useState<string | null>(
-    localStorage.getItem("nickname")
-  );
 
   const fetchProduct = async () => {
     try {
@@ -28,20 +27,6 @@ const ProductDetailPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchNickname = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const res = await axios.get(`${API_BASE}/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        localStorage.setItem("nickname", res.data.nickname); // (원한다면)
-        setCurrentUserNickname(res.data.nickname);
-      } catch (err) {
-        console.error("닉네임 불러오기 실패", err);
-      }
-    };
-
-    fetchNickname();
     fetchProduct();
   }, [id]);
 
@@ -75,7 +60,7 @@ const ProductDetailPage: React.FC = () => {
         product.uploadedBy?.profileImage || "default.png"
       }`;
 
-  const isMyPost = product.uploadedBy?.nickname === currentUserNickname;
+  const isMyPost = user.name === product.uploadedBy?.nickname; // ✅ 로그인 유저와 비교
 
   return (
     <div>

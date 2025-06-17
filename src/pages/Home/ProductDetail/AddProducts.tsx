@@ -223,7 +223,12 @@ const AddProducts = () => {
                   src={imagePreview}
                   alt="미리보기"
                   className="imagePreview"
-                  style={{ maxWidth: "100%", maxHeight: "250px", objectFit: "contain" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                  }}
                 />
               ) : (
                 <div className="imageUploadContent">

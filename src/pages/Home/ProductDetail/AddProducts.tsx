@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../../components/Header/Header";
 import Select, { components } from "react-select";
 import { uploadImageAndGetUrl } from "../../../../src/firebase/upload";
 import axios from "axios";
 import "../../../styles/AddProducts.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const API_BASE = process.env.REACT_APP_API_URL;
 
 const AddProducts = () => {
@@ -17,6 +17,7 @@ const AddProducts = () => {
   const [productUrl, setProductUrl] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const navigate = useNavigate();
+
   const categoryOptions = [
     { value: "상의", label: "상의" },
     { value: "하의", label: "하의" },
@@ -25,14 +26,70 @@ const AddProducts = () => {
     { value: "폰케이스", label: "폰케이스" },
   ];
 
-  const tagOptions = [
-    { value: "러블리", label: "러블리" },
-    { value: "스트릿", label: "스트릿" },
-    { value: "힙", label: "힙" },
-    { value: "미니멀", label: "미니멀" },
-    { value: "큐티", label: "큐티" },
-    { value: "프리티", label: "프리티" },
-  ];
+  const tagOptionsByCategory: Record<string, { value: string; label: string }[]> = {
+    상의: [
+      { value: "스트릿", label: "스트릿" },
+      { value: "심플", label: "심플" },
+      { value: "미니멀", label: "미니멀" },
+      { value: "러블리", label: "러블리" },
+      { value: "걸리시", label: "걸리시" },
+      { value: "캐주얼", label: "캐주얼" },
+      { value: "유니크", label: "유니크" },
+      { value: "하이틴", label: "하이틴" },
+      { value: "오버핏", label: "오버핏" },
+      { value: "크롭", label: "크롭" },
+    ],
+    하의: [
+      { value: "시크", label: "시크" },
+      { value: "스트릿", label: "스트릿" },
+      { value: "미니멀", label: "미니멀" },
+      { value: "캐주얼", label: "캐주얼" },
+      { value: "러블리", label: "러블리" },
+      { value: "페미닌", label: "페미닌" },
+      { value: "하이웨스트", label: "하이웨스트" },
+      { value: "롱스커트", label: "롱스커트" },
+      { value: "와이드핏", label: "와이드핏" },
+      { value: "키치", label: "키치" },
+    ],
+    신발: [
+      { value: "스포티", label: "스포티" },
+      { value: "스트릿", label: "스트릿" },
+      { value: "시크", label: "시크" },
+      { value: "러블리", label: "러블리" },
+      { value: "클래식", label: "클래식" },
+      { value: "빈티지", label: "빈티지" },
+      { value: "유니크", label: "유니크" },
+      { value: "슬림핏", label: "슬림핏" },
+    ],
+    액세서리: [
+      { value: "큐티", label: "큐티" },
+      { value: "러블리", label: "러블리" },
+      { value: "키치", label: "키치" },
+      { value: "심플", label: "심플" },
+      { value: "하이틴", label: "하이틴" },
+      { value: "레트로", label: "레트로" },
+      { value: "포인트", label: "포인트" },
+      { value: "데일리", label: "데일리" },
+    ],
+    폰케이스: [
+      { value: "유니크", label: "유니크" },
+      { value: "큐티", label: "큐티" },
+      { value: "키치", label: "키치" },
+      { value: "하이틴", label: "하이틴" },
+      { value: "레트로", label: "레트로" },
+      { value: "컬러풀", label: "컬러풀" },
+      { value: "심플", label: "심플" },
+      { value: "글리터", label: "글리터" },
+      { value: "무광", label: "무광" },
+      { value: "투명", label: "투명" },
+    ],
+  };
+
+  const currentTagOptions = tagOptionsByCategory[category] || [];
+
+  useEffect(() => {
+    setTags([]); // 카테고리 변경 시 태그 초기화
+  }, [category]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -69,7 +126,6 @@ const AddProducts = () => {
       );
 
       alert("상품 등록 완료");
-      console.log(res.data);
       navigate(`/products/${res.data.data.id}`);
     } catch (err: any) {
       console.error("상품 등록 오류:", err?.response?.data || err);
@@ -202,14 +258,13 @@ const AddProducts = () => {
                 <FormLabel text={`태그된 주제 (${tags.length}개)`} />
                 <Select
                   isMulti
-                  options={tagOptions}
+                  options={currentTagOptions}
                   placeholder="태그 선택하기"
-                  value={tagOptions.filter((option) => tags.includes(option.value))}
+                  value={currentTagOptions.filter((option) => tags.includes(option.value))}
                   onChange={(selectedOptions) => setTags(selectedOptions.map((option) => option.value))}
                   styles={selectStyle}
                   components={{ MenuList: CustomMenuList }}
                 />
-
                 <FormLabel text="사이트" />
                 <input
                   placeholder="사이트 주소를 입력하세요"

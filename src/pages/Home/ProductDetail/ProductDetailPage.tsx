@@ -29,17 +29,15 @@ const ProductDetailPage: React.FC = () => {
 
   useEffect(() => {
     const fetchNickname = async () => {
-      if (!localStorage.getItem("nickname")) {
-        try {
-          const token = localStorage.getItem("accessToken");
-          const res = await axios.get(`${API_BASE}/users/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          localStorage.setItem("nickname", res.data.nickname);
-          setCurrentUserNickname(res.data.nickname);
-        } catch (err) {
-          console.error("닉네임 불러오기 실패", err);
-        }
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await axios.get(`${API_BASE}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        localStorage.setItem("nickname", res.data.nickname); // (원한다면)
+        setCurrentUserNickname(res.data.nickname);
+      } catch (err) {
+        console.error("닉네임 불러오기 실패", err);
       }
     };
 

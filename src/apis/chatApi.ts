@@ -1,4 +1,6 @@
-const API_BASE = process.env.REACT_APP_API_URL;
+// src/apis/chatApi.ts
+
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000"; // fallback
 
 export const fetchRecommendations = async (tag: string) => {
   const response = await fetch(`${API_BASE}/chatbot/message`, {
@@ -6,11 +8,14 @@ export const fetchRecommendations = async (tag: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message: tag }), // ✅ 전송 메시지
+    body: JSON.stringify({ message: tag }),
   });
+
+  if (!response.ok) {
+    throw new Error("AI 서버 또는 백엔드와 연결할 수 없습니다.");
+  }
 
   const result = await response.json();
 
-  // ✅ 전체 응답 객체 반환 (예: { success: true, messages: [...] })
-  return result;
+  return result; // { messages: [...] }
 };

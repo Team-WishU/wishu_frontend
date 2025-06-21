@@ -31,7 +31,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSign
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("userId", user.userId || user._id || user.id || "");
       console.log("로그인토큰", accessToken);
       window.dispatchEvent(new Event("userUpdated"));
 

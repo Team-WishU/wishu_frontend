@@ -6,7 +6,6 @@ import MyPage from "../pages/Home/MyPage/MyPage";
 import AddProducts from "../pages/Home/ProductDetail/AddProducts";
 import ProfileSetting from "../pages/Setting/Profile_Setting";
 import SearchResultPage from "../pages/Home/SearchResultPage";
-import ProfilePage from "../pages/Profile/ProfilePage";
 
 const AppRouter = () => {
   return (
@@ -18,7 +17,6 @@ const AppRouter = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/profile-setting" element={<ProfileSetting />} />
       <Route path="/search" element={<SearchResultPage />} />
-      <Route path="/profile/:id" element={<ProfilePage />} />
     </Routes>
   );
 };

@@ -159,12 +159,7 @@ const Header: React.FC = () => {
           ) : (
             <div className="profile-container">
               <div className="user-trigger">
-                {/* 프로필사진 + 닉네임 둘 다 클릭 시 마이페이지 이동 */}
-                <div
-                  className="profile-circle"
-                  onClick={() => navigate("/mypage")}
-                  style={{ cursor: "pointer" }}
-                >
+                <div className="profile-circle">
                   <img
                     src={avatarSrc}
                     alt="avatar"
@@ -179,14 +174,7 @@ const Header: React.FC = () => {
                     }}
                   />
                 </div>
-                <span
-                  className="username"
-                  onClick={() => navigate("/mypage")}
-                  style={{ cursor: "pointer" }}
-                >
-                  {user.name}
-                </span>
-                {/* 드롭다운은 > 아이콘만 누를 때만 열림 */}
+                <span className="username">{user.name}</span>
                 <img
                   src="/assets/icons/Chevron_Down.svg"
                   alt="메뉴 열기"
@@ -195,7 +183,6 @@ const Header: React.FC = () => {
                     e.stopPropagation();
                     setIsMenuOpen(!isMenuOpen);
                   }}
-                  style={{ cursor: "pointer" }}
                 />
               </div>
               {isMenuOpen && <UserMenu />}

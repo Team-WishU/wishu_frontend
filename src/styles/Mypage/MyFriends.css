@@ -1,0 +1,157 @@
+
+.friend-request-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 100px;       
+  width: 100%;
+  margin-top: 40px;
+}
+
+.friend-request-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 270px;
+  max-width: 440px;
+  padding: 0 32px;
+}
+
+.friend-request-col.left {
+  align-items: flex-start;
+  margin-left: 120px;
+  margin-right: 120px;
+}
+
+.friend-request-col.right {
+  align-items: flex-end;
+  margin-right: 120px;
+   margin-left: 120px;
+}
+
+.friend-section-title-custom {
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 18px;
+  font-size: 18px;
+}
+
+.friend-card-custom {
+  display: flex;
+  align-items: center;
+  background: #faf8ff;
+  border-radius: 14px;
+  box-shadow: 0 1px 8px #f2f2f2;
+  padding: 18px 28px;
+  width: 100%;
+  max-width: 410px;
+  min-width: 200px;
+  min-height: 60px;
+  gap: 20px;
+  margin-bottom: 16px;
+  margin-left: 160px;
+}
+
+.friend-card-outgoing-custom {
+  opacity: 0.6;
+}
+
+.friend-avatar-custom {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1.5px solid #d4caff;
+  background: #fff;
+}
+
+.friend-name-custom {
+  font-size: 17px;
+  font-weight: 700;
+  color: #463e8e;
+  margin-left: 9px;
+}
+
+.friend-remove-btn-custom,
+.friend-accept-btn-custom {
+  margin-left: auto;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 19px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.friend-remove-btn-custom {
+  background: #fff0f0;
+  color: #e64848;
+}
+.friend-remove-btn-custom:hover {
+  background: #ffdadb;
+  color: #a30000;
+}
+
+.friend-accept-btn-custom {
+  background: #eafee7;
+  color: #20b233;
+}
+.friend-accept-btn-custom:hover {
+  background: #b7ffc8;
+  color: #147525;
+}
+
+.friend-pending-custom {
+  margin-left: auto;
+  color: #bbb;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.friend-share-btn-custom {
+  background: #f4edff;
+  color: #8e4ffb;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 19px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.friend-share-btn-custom:hover {
+  background: #e7d6ff;
+  color: #6634cb;
+}
+
+/* 모바일에서는 한 열로 */
+@media (max-width: 1100px) {
+  .friend-request-row {
+    gap: 18px;
+  }
+  .friend-request-col {
+    padding: 0 8px;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
+}
+@media (max-width: 900px) {
+  .friend-request-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .friend-request-col {
+    align-items: center !important;
+    width: 100%;
+    max-width: none;
+    margin: 0 !important;
+    padding: 0;
+  }
+  .friend-section-title-custom {
+    text-align: center;
+    width: 100%;
+  }
+}

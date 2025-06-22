@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react";//수정
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import "../../styles/UserMenu.css";

@@ -10,7 +10,7 @@ const API_BASE = process.env.REACT_APP_API_URL;
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useUser(); // 사용자 정보 가져오기
+  const { user } = useUser();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState("");
@@ -32,7 +32,6 @@ const ProductDetailPage: React.FC = () => {
 
   const handleAddComment = async () => {
     if (!commentText.trim()) return alert("댓글을 입력해주세요");
-
     try {
       const token = localStorage.getItem("accessToken");
       const res = await axios.post(
@@ -42,7 +41,6 @@ const ProductDetailPage: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       setProduct(res.data);
       setCommentText("");
     } catch (err) {
@@ -56,11 +54,9 @@ const ProductDetailPage: React.FC = () => {
 
   const avatarSrc = product.uploadedBy?.profileImage?.includes("/assets")
     ? product.uploadedBy.profileImage
-    : `/assets/images/Signup/${
-        product.uploadedBy?.profileImage || "default.png"
-      }`;
+    : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
 
-  const isMyPost = user.name === product.uploadedBy?.nickname; // ✅ 로그인 유저와 비교
+  const isMyPost = user.name === product.uploadedBy?.nickname;
 
   return (
     <div>
@@ -70,24 +66,23 @@ const ProductDetailPage: React.FC = () => {
           {/* 이미지 영역 */}
           <div className="product-image-section">
             <div className="category-hash">#{product.category}</div>
-            <img
-              src={product.imageUrl}
-              alt="product"
-              className="product-image"
-            />
-            <div className="product-writer">
+            <img src={product.imageUrl} alt="product" className="product-image" />
+            {/* 작성자 프로필/닉네임 클릭 시 이동 */}
+            <div
+              className="product-writer"
+              style={{ cursor: 'pointer' }}
+            // onClick 프로필 이동 부분 수정
+              onClick={() => navigate(`/profile/${product.uploadedBy?.nickname}`)}
+            >
               <img
                 src={avatarSrc}
                 alt="작성자"
                 className="writer-avatar"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "/assets/images/Signup/default.png";
+                  (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
                 }}
               />
-              <span className="writer-name">
-                {product.uploadedBy?.nickname}
-              </span>
+              <span className="writer-name">{product.uploadedBy?.nickname}</span>
             </div>
           </div>
 
@@ -103,7 +98,6 @@ const ProductDetailPage: React.FC = () => {
                 </button>
               </div>
             )}
-
             <h1 className="product-brand">{product.brand}</h1>
             <hr className="divider" />
             <h1 className="product-title">{product.title}</h1>
@@ -115,23 +109,19 @@ const ProductDetailPage: React.FC = () => {
                 <span key={idx}>#{tag}</span>
               ))}
             </div>
-
             <div className="product-buttons">
               <button
                 className="black-button"
                 onClick={async () => {
                   const confirm = window.confirm("상품을 담으시겠습니까?");
                   if (!confirm) return;
-
                   try {
                     const token = localStorage.getItem("accessToken");
                     await axios.post(
                       `${API_BASE}/products/${id}/save`,
                       {},
                       {
-                        headers: {
-                          Authorization: `Bearer ${token}`,
-                        },
+                        headers: { Authorization: `Bearer ${token}` },
                       }
                     );
                     alert("상품이 담겼습니다!");
@@ -152,11 +142,9 @@ const ProductDetailPage: React.FC = () => {
                 </button>
               )}
             </div>
-
             {/* 댓글 영역 */}
             <div className="comment-section">
               <p className="comment-title">어떠셨나요?</p>
-
               <div className="comment-input-wrapper">
                 <input
                   type="text"
@@ -176,18 +164,12 @@ const ProductDetailPage: React.FC = () => {
                   style={{ cursor: "pointer" }}
                 />
               </div>
-
-              <p className="comment-count">
-                댓글 {product.comments?.length || 0}개
-              </p>
-
+              <p className="comment-count">댓글 {product.comments?.length || 0}개</p>
               <div className="comment-list-scroll">
                 {product.comments?.map((comment: any, idx: number) => {
                   const profileSrc = comment.profileImage?.includes("/assets")
                     ? comment.profileImage
-                    : `/assets/images/Signup/${
-                        comment.profileImage || "default.png"
-                      }`;
+                    : `/assets/images/Signup/${comment.profileImage || "default.png"}`;
                   return (
                     <div className="comment-item" key={idx}>
                       <img

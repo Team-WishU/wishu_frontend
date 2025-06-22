@@ -5,6 +5,7 @@ import ProductDetailPage from "../pages/Home/ProductDetail/ProductDetailPage";
 import MyPage from "../pages/Home/MyPage/MyPage";
 import AddProducts from "../pages/Home/ProductDetail/AddProducts";
 import SearchResultPage from "../pages/Home/SearchResultPage";
+import ProfilePage from "../pages/Profile/ProfilePage";
 
 const AppRouter = () => {
   return (
@@ -15,6 +16,7 @@ const AppRouter = () => {
       <Route path="/products/:id/edit" element={<AddProducts />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/search" element={<SearchResultPage />} />
+      <Route path="/profile/:id" element={<ProfilePage />} />
     </Routes>
   );
 };

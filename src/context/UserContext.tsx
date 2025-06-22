@@ -4,7 +4,7 @@ interface UserInfo {
   name: string;
   email: string;
   avatar: string;
-  nickname?: string; // 추가
+  nickname?: string;
 }
 
 interface UserContextType {
@@ -44,17 +44,47 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("accessToken");
 
+    // 먼저 로컬 데이터 적용
     if (storedUser && token) {
       const parsed = JSON.parse(storedUser);
       setUser({
         name: parsed.nickname || parsed.name || "",
         email: parsed.email,
         avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
-        nickname: parsed.nickname || "", // 추가
+        nickname: parsed.nickname || "",
       });
       setIsLoggedIn(true);
     }
 
+    // 🔥 서버에서 최신 nickname 동기화
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch user");
+        const data = await res.json();
+
+        const updatedUser = {
+          name: data.nickname || data.name || "",
+          email: data.email,
+          avatar: formatAvatar(data.profileImage || ""),
+          nickname: data.nickname || "",
+        };
+
+        setUser(updatedUser);
+        setIsLoggedIn(true);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      } catch (err) {
+        console.error("사용자 정보 불러오기 실패", err);
+      }
+    };
+
+    if (token) fetchUser();
+
+    // 로그인 상태 변경 감지
     const handler = () => {
       const updatedUser = localStorage.getItem("user");
       const updatedToken = localStorage.getItem("accessToken");
@@ -67,7 +97,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           name: parsed.nickname || parsed.name || "",
           email: parsed.email,
           avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
-          nickname: parsed.nickname || "", // 추가
+          nickname: parsed.nickname || "",
         });
         setIsLoggedIn(true);
       }

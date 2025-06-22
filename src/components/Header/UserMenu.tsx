@@ -38,17 +38,6 @@ const UserMenu: React.FC = () => {
       <hr />
 
       <div className="dropdown-section">
-        <div
-          className="dropdown-item"
-          onClick={() => navigate("/profile-setting")}
-        >
-          <img
-            src="/assets/icons/settings.svg"
-            alt="설정"
-            className="dropdown-icon-img"
-          />
-          프로필 설정
-        </div>
         <div className="dropdown-item" onClick={handleLogout}>
           <img
             src="/assets/icons/logout.svg"

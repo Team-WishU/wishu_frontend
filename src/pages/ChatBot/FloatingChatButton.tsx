@@ -7,9 +7,6 @@ const FloatingChatButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [inChatMode, setInChatMode] = useState(false);
 
-  const toggleChat = () => {
-    setIsOpen((prev) => !prev);
-  };
   const openChatPreview = () => {
     setIsOpen(true);
     setInChatMode(false);
@@ -20,13 +17,17 @@ const FloatingChatButton: React.FC = () => {
     setInChatMode(false);
   };
 
+  const startChat = () => {
+    setInChatMode(true);
+  };
+
   return (
     <>
       {isOpen &&
         (inChatMode ? (
-          <ChatWindowModal />
+          <ChatWindowModal onClose={closeChat} />
         ) : (
-          <ChatPreviewModal onStartChat={() => setInChatMode(true)} />
+          <ChatPreviewModal onStartChat={startChat} onClose={closeChat} />
         ))}
       <button
         className={`floating-chat-button ${isOpen ? "close" : ""}`}

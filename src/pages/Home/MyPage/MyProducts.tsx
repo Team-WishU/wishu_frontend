@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";//수정
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/Mypage/MyProducts.css";

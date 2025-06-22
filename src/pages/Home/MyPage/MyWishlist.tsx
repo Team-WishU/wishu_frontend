@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";//수정
 import "../../../styles/Mypage/MyWishlist.css";
 import WishlistDetail from "./WishlistDetail";
 import axios from "axios";

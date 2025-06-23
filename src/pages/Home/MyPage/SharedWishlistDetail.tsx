@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useRef } from 'react';
+import io from 'socket.io-client';
 import '../../../styles/Mypage/SharedWishlistDetail.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || '';
@@ -56,43 +56,80 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
   const [comment, setComment] = useState<string>('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState<string | null>(null);
 
   const myId = localStorage.getItem('userId') ?? '';
-  const token = localStorage.getItem('accessToken');
+  const myNickname = localStorage.getItem('nickname') ?? '';
+  const myProfileImage = localStorage.getItem('profileImage') ?? '';
   const bucketId = bucket._id || bucket.bucketId;
 
-  // 댓글 불러오기
-  const fetchComments = async () => {
-    if (!bucketId) return;
-    setLoading(true);
-    try {
-      const res = await axios.get(`${API_BASE}/shared-buckets/${bucketId}/comments`);
-      setComments(Array.isArray(res.data) ? res.data : []);
-    } catch {
-      setComments([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // 소켓 연결 관리
+  const socketRef = useRef<any>(null);
+  // 입력중 표시 딜레이용 ref
+  const typingTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    fetchComments();
+    if (!bucketId) return;
+    // 1. 소켓 연결
+    const socket = io(API_BASE, {
+      transports: ['websocket'],
+      withCredentials: true,
+    });
+    socketRef.current = socket;
+
+    // 2. 방 입장
+    socket.emit('joinRoom', { bucketId });
+
+    // 3. 과거 채팅(댓글) 로딩 (REST 1회만)
+    setLoading(true);
+    fetch(`${API_BASE}/shared-buckets/${bucketId}/comments`)
+      .then((res) => res.json())
+      .then((data) => setComments(Array.isArray(data) ? data : []))
+      .finally(() => setLoading(false));
+
+    // 4. 새 메시지(댓글) 실시간 수신
+    socket.on('newMessage', (msg: Comment) => {
+      setComments((prev) => [...prev, msg]);
+    });
+
+    // 5. 입력중 표시 이벤트 수신
+    socket.on('showTyping', ({ nickname }) => {
+      setIsTyping(nickname);
+      if (typingTimeout.current) clearTimeout(typingTimeout.current);
+      typingTimeout.current = setTimeout(() => setIsTyping(null), 2000); // 2초 후 사라짐
+    });
+
+    // 언마운트 시 소켓 disconnect
+    return () => {
+      socket.disconnect();
+      if (typingTimeout.current) clearTimeout(typingTimeout.current);
+    };
     // eslint-disable-next-line
   }, [bucketId]);
 
-  // 댓글 등록
-  const handleSend = async () => {
-    if (!comment.trim() || !bucketId) return;
-    try {
-      await axios.post(
-        `${API_BASE}/shared-buckets/${bucketId}/comment`,
-        { text: comment },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      setComment('');
-      fetchComments();
-    } catch {
-      alert('댓글 등록 실패');
+  // 메시지 전송
+  const handleSend = () => {
+    if (!comment.trim() || !bucketId || !socketRef.current) return;
+    socketRef.current.emit('sendMessage', {
+      bucketId,
+      user: {
+        _id: myId,
+        nickname: myNickname,
+        profileImage: myProfileImage,
+      },
+      text: comment,
+    });
+    setComment('');
+    // UI 반영은 서버에서 newMessage 이벤트로 처리됨
+  };
+
+  // 입력중 감지 → 서버로 typing 이벤트 전송
+  const handleTyping = () => {
+    if (socketRef.current && bucketId) {
+      socketRef.current.emit('typing', {
+        bucketId,
+        user: { nickname: myNickname },
+      });
     }
   };
 
@@ -151,32 +188,42 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
         </div>
       </div>
       <div className="shared-comment-container">
-        <div className="shared-comment-title">공유 댓글</div>
+        <div className="shared-comment-title">공유 채팅</div>
         <div className="shared-comment-list">
           {loading ? (
             <div style={{ color: '#aaa', padding: 16 }}>로딩중...</div>
           ) : (
-            (comments || []).map((c, idx) => (
-              <div key={c.createdAt + c.text + idx} className="shared-comment-item">
-                <img
-                  src={getProfileImage(c.profileImage)}
-                  alt={c.nickname}
-                  className="shared-comment-avatar"
-                  onError={(e) =>
-                    ((e.target as HTMLImageElement).src = '/assets/images/default.png')
-                  }
-                />
-                <b className="shared-comment-username">{c.nickname}</b>
-                <span className="shared-comment-text">{c.text}</span>
-              </div>
-            ))
+            <>
+              {(comments || []).map((c, idx) => (
+                <div key={c.createdAt + c.text + idx} className="shared-comment-item">
+                  <img
+                    src={getProfileImage(c.profileImage)}
+                    alt={c.nickname}
+                    className="shared-comment-avatar"
+                    onError={(e) =>
+                      ((e.target as HTMLImageElement).src = '/assets/images/default.png')
+                    }
+                  />
+                  <b className="shared-comment-username">{c.nickname}</b>
+                  <span className="shared-comment-text">{c.text}</span>
+                </div>
+              ))}
+              {isTyping && (
+                <div style={{ color: '#aaa', padding: '5px 12px' }}>
+                  {isTyping}님이 채팅을 입력중...
+                </div>
+              )}
+            </>
           )}
         </div>
         <div className="shared-comment-input-row">
           <input
             className="shared-comment-input"
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) => {
+              setComment(e.target.value);
+              handleTyping();
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSend();
             }}

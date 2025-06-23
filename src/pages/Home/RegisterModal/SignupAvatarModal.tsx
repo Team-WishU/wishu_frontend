@@ -109,6 +109,10 @@ const SignupAvatarModal: React.FC<SignupAvatarModalProps> = ({
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
+
+      localStorage.setItem("userId", user._id);
+      localStorage.setItem("nickname", user.nickname);
+      localStorage.setItem("profileImage", user.profileImage);
       window.dispatchEvent(new Event("userUpdated"));
 
       login({

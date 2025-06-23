@@ -28,9 +28,12 @@ interface SharedBucket {
 }
 
 interface Comment {
-  userId: string;
-  nickname: string;
-  profileImage: string;
+  user: {
+    userId?: string;
+    _id?: string;
+    nickname: string;
+    profileImage: string;
+  };
   text: string;
   createdAt: string;
 }
@@ -70,12 +73,18 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
 
   useEffect(() => {
     if (!bucketId) return;
+    console.log("소켓 연결 시도!", API_BASE);
+
     // 1. 소켓 연결
     const socket = io(API_BASE, {
       transports: ['websocket'],
       withCredentials: true,
     });
     socketRef.current = socket;
+
+    socket.on('connect', () => {
+      console.log('소켓 연결 성공!');
+    });
 
     // 2. 방 입장
     socket.emit('joinRoom', { bucketId });
@@ -94,9 +103,12 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
 
     // 5. 입력중 표시 이벤트 수신
     socket.on('showTyping', ({ nickname }) => {
-      setIsTyping(nickname);
-      if (typingTimeout.current) clearTimeout(typingTimeout.current);
-      typingTimeout.current = setTimeout(() => setIsTyping(null), 2000); // 2초 후 사라짐
+      // 내 닉네임이 아니면 표시!
+      if (nickname !== myNickname) {
+        setIsTyping(nickname);
+        if (typingTimeout.current) clearTimeout(typingTimeout.current);
+        typingTimeout.current = setTimeout(() => setIsTyping(null), 2000);
+      }
     });
 
     // 언마운트 시 소켓 disconnect
@@ -197,14 +209,14 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
               {(comments || []).map((c, idx) => (
                 <div key={c.createdAt + c.text + idx} className="shared-comment-item">
                   <img
-                    src={getProfileImage(c.profileImage)}
-                    alt={c.nickname}
+                    src={getProfileImage(c.user.profileImage)}
+                    alt={c.user.nickname}
                     className="shared-comment-avatar"
                     onError={(e) =>
                       ((e.target as HTMLImageElement).src = '/assets/images/default.png')
                     }
                   />
-                  <b className="shared-comment-username">{c.nickname}</b>
+                  <b className="shared-comment-username">{c.user.nickname}</b>
                   <span className="shared-comment-text">{c.text}</span>
                 </div>
               ))}

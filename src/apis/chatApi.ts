@@ -1,8 +1,12 @@
 const API_BASE = process.env.REACT_APP_API_URL;
 
 // 메시지 전송 API (accessToken 헤더로)
-export const fetchRecommendations = async ({ message }: { message: string }) => {
-  const accessToken = localStorage.getItem('accessToken');
+export const fetchRecommendations = async ({
+  message,
+}: {
+  message: string;
+}) => {
+  const accessToken = localStorage.getItem("accessToken");
 
   const response = await fetch(`${API_BASE}/chatbot/message`, {
     method: "POST",
@@ -19,7 +23,7 @@ export const fetchRecommendations = async ({ message }: { message: string }) => 
 
 // 챗봇 상태 초기화 API (accessToken 헤더로)
 export const resetChat = async () => {
-  const accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem("accessToken");
 
   const response = await fetch(`${API_BASE}/chatbot/reset`, {
     method: "POST",

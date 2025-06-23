@@ -383,7 +383,7 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  -webkit-overflow-scrolling: touch;
+  /* -webkit-overflow-scrolling: touch; */
   scrollbar-width: none;
   /* padding-left: 400px; */
 }
@@ -451,7 +451,7 @@
   display: flex;
   justify-content: flex-start; /* center → flex-start */
   width: 100%;
-  overflow-x: auto; /* ✅ 스크롤 가능하게 */
+  overflow-x: auto; /* 스크롤 가능하게 */
   box-sizing: border-box;
   padding: 0 8px;
   -webkit-overflow-scrolling: touch;
@@ -469,7 +469,7 @@
   padding: 6px 8px;
   scroll-padding-left: 12px;
   box-sizing: border-box;
-  min-width: max-content; /* ✅ 내부 콘텐츠 크기만큼 너비 확보 */
+  min-width: max-content; /* 내부 콘텐츠 크기만큼 너비 확보 */
   scrollbar-width: none;
 }
 
@@ -479,7 +479,7 @@
 
 .chat-window-tags button,
 .chat-window-back-button {
-  flex: 0 0 auto; /* ✅ 줄바꿈 방지 */
+  flex: 0 0 auto; /*  줄바꿈 방지 */
   white-space: nowrap;
   background-color: #bf00ff;
   color: white;
@@ -537,4 +537,22 @@
   visibility: hidden;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 999;
+}
+
+.chat-window-tags.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.chat-window-tags {
+  cursor: grab;
+}
+
+.chat-window-tags {
+  overflow-x: auto; /* 반드시 있어야 함 */
+  white-space: nowrap;
+}
+
+.chat-window-tags.dragging {
+  cursor: grabbing;
+  user-select: none;
 }

@@ -16,7 +16,7 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const chatContentRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { user } = useUser();
+  useUser(); // context는 유지, 경고 제거
 
   const tagOptionsByCategory: Record<
     string,
@@ -107,6 +107,60 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
     }
   }, [messages, initialChoiceVisible]);
 
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const containers = document.querySelectorAll<HTMLElement>(
+        ".chat-window-tags.scrollable-tags, .chat-window-tags.wrap-tags"
+      );
+
+      containers.forEach((container) => {
+        // 이미 핸들러 등록된 경우 중복 방지
+        if ((container as any)._dragBound) return;
+        (container as any)._dragBound = true;
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+
+        const mouseDownHandler = (e: MouseEvent) => {
+          isDown = true;
+          container.classList.add("dragging");
+          startX = e.pageX - container.offsetLeft;
+          scrollLeft = container.scrollLeft;
+        };
+
+        const mouseLeaveHandler = () => {
+          isDown = false;
+          container.classList.remove("dragging");
+        };
+
+        const mouseUpHandler = () => {
+          isDown = false;
+          container.classList.remove("dragging");
+        };
+
+        const mouseMoveHandler = (e: MouseEvent) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - container.offsetLeft;
+          const walk = (x - startX) * 1.5;
+          container.scrollLeft = scrollLeft - walk;
+        };
+
+        container.addEventListener("mousedown", mouseDownHandler);
+        container.addEventListener("mouseleave", mouseLeaveHandler);
+        container.addEventListener("mouseup", mouseUpHandler);
+        container.addEventListener("mousemove", mouseMoveHandler);
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleInitialChoiceClick = (choice: string) => {
     setMessages((prev) => [...prev, { type: "user", content: choice }]);
@@ -122,9 +176,7 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
     setMessages((prev) => [...prev, { type: "loading" }]);
 
     try {
-      const result = await fetchRecommendations({
-        message: msg,
-      });
+      const result = await fetchRecommendations({ message: msg });
 
       if (!result || !result.messages || result.messages.length === 0) return;
 
@@ -175,7 +227,6 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
   const handleItemClick = (id: string) => {
     navigate(`/products/${id}`);
   };
-
   return (
     <div className="chat-window-modal">
       <div className="chat-window-header">
@@ -348,8 +399,9 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
             />
             <div className="chat-window-icons">
               <svg
-                className={`chat-window-icon ${inputValue.trim() ? "active" : "inactive"
-                  }`}
+                className={`chat-window-icon ${
+                  inputValue.trim() ? "active" : "inactive"
+                }`}
                 width="18"
                 height="18"
                 viewBox="0 0 14 12"

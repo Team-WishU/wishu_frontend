@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";//수정
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../../styles/Mypage/MyWishlist.css";
 import "../../../styles/Mypage/MyFriends.css";
@@ -31,6 +32,7 @@ const MyFriends: React.FC<MyFriendsProps> = ({ onGoSharedWishlist }) => {
   const [loading, setLoading] = useState(false);
 
   const myId = localStorage.getItem("userId") ?? "";
+  const navigate = useNavigate();
 
   const fetchFriends = async () => {
     setLoading(true);
@@ -81,6 +83,7 @@ const MyFriends: React.FC<MyFriendsProps> = ({ onGoSharedWishlist }) => {
       );
       fetchRequests();
       fetchFriends();
+      setTab("friends");
     } catch (err: any) {
       alert(err.response?.data?.message || "요청 수락 실패");
     }
@@ -104,7 +107,7 @@ const MyFriends: React.FC<MyFriendsProps> = ({ onGoSharedWishlist }) => {
     try {
       const token = localStorage.getItem("accessToken");
       const res = await axios.get(
-        `${API_BASE}/shared-buckets/wishlist?user1=${myId}&user2=${friend._id}`,
+        `${API_BASE}/shared-buckets/wishlist?friendId=${friend._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -150,11 +153,19 @@ const MyFriends: React.FC<MyFriendsProps> = ({ onGoSharedWishlist }) => {
                     src={getProfileImage(f.profileImage)}
                     alt={f.nickname}
                     className="friend-avatar-custom"
+                    onClick={() => navigate(`/profile/${f._id}`)}
+                    style={{ cursor: "pointer" }}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
                     }}
                   />
-                  <span className="friend-name-custom">{f.nickname}</span>
+                  <span
+                    className="friend-name-custom"
+                    onClick={() => navigate(`/profile/${f._id}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {f.nickname}
+                  </span>
                   <button
                     className="friend-share-btn-custom"
                     onClick={() => handleShareClick(f)}
@@ -187,11 +198,19 @@ const MyFriends: React.FC<MyFriendsProps> = ({ onGoSharedWishlist }) => {
                       src={getProfileImage(r.profileImage)}
                       alt={r.nickname}
                       className="friend-avatar-custom"
+                      onClick={() => navigate(`/profile/${r._id}`)}
+                      style={{ cursor: "pointer" }}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
                       }}
                     />
-                    <span className="friend-name-custom">{r.nickname}</span>
+                    <span
+                      className="friend-name-custom"
+                      onClick={() => navigate(`/profile/${r._id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {r.nickname}
+                    </span>
                     <button className="friend-accept-btn-custom" onClick={() => acceptRequest(r._id)}>
                       수락
                     </button>
@@ -211,11 +230,19 @@ const MyFriends: React.FC<MyFriendsProps> = ({ onGoSharedWishlist }) => {
                       src={getProfileImage(r.profileImage)}
                       alt={r.nickname}
                       className="friend-avatar-custom"
+                      onClick={() => navigate(`/profile/${r._id}`)}
+                      style={{ cursor: "pointer" }}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
                       }}
                     />
-                    <span className="friend-name-custom">{r.nickname}</span>
+                    <span
+                      className="friend-name-custom"
+                      onClick={() => navigate(`/profile/${r._id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {r.nickname}
+                    </span>
                     <span className="friend-pending-custom">요청 보냄</span>
                   </div>
                 ))

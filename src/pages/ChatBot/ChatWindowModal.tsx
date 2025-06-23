@@ -85,7 +85,8 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
   useEffect(() => {
     const initializeChat = async () => {
       try {
-        await resetChat(user?.nickname);
+        // nickname → user._id
+        await resetChat(user?._id);
       } catch (err) {
         console.error("챗봇 상태 초기화 실패", err);
       }
@@ -107,6 +108,7 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
     }
   }, [messages, initialChoiceVisible]);
 
+
   const handleInitialChoiceClick = (choice: string) => {
     setMessages((prev) => [...prev, { type: "user", content: choice }]);
     setInitialChoiceVisible(false);
@@ -123,7 +125,7 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
     try {
       const result = await fetchRecommendations({
         message: msg,
-        nickname: user?.nickname,
+        userId: user?._id,
       });
 
       if (!result || !result.messages || result.messages.length === 0) return;
@@ -348,9 +350,8 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
             />
             <div className="chat-window-icons">
               <svg
-                className={`chat-window-icon ${
-                  inputValue.trim() ? "active" : "inactive"
-                }`}
+                className={`chat-window-icon ${inputValue.trim() ? "active" : "inactive"
+                  }`}
                 width="18"
                 height="18"
                 viewBox="0 0 14 12"

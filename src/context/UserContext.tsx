@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface UserInfo {
   _id?: string;
@@ -11,16 +17,24 @@ interface UserInfo {
 interface UserContextType {
   user: UserInfo;
   isLoggedIn: boolean;
+  loading: boolean;
   login: (user: UserInfo) => void;
   logout: () => void;
   withdraw: () => void;
 }
 
-const defaultUser: UserInfo = { _id: "", name: "", email: "", avatar: "", nickname: "" };
+const defaultUser: UserInfo = {
+  _id: "",
+  name: "",
+  email: "",
+  avatar: "",
+  nickname: "",
+};
 
 const UserContext = createContext<UserContextType>({
   user: defaultUser,
   isLoggedIn: false,
+  loading: true,
   login: () => {},
   logout: () => {},
   withdraw: () => {},
@@ -28,11 +42,12 @@ const UserContext = createContext<UserContextType>({
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<UserInfo>(defaultUser);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const formatAvatar = (avatar: string) => {
     if (!avatar) return "";
@@ -56,6 +71,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       setIsLoggedIn(true);
     }
+
+    setLoading(false);
 
     const handler = () => {
       const updatedUser = localStorage.getItem("user");
@@ -82,11 +99,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = (user: UserInfo) => {
     const formatted: UserInfo = {
-      _id: user._id || '',
-      name: user.nickname || user.name || '',
+      _id: user._id || "",
+      name: user.nickname || user.name || "",
       email: user.email,
       avatar: formatAvatar(user.avatar),
-      nickname: user.nickname || '',
+      nickname: user.nickname || "",
     };
     setUser(formatted);
     setIsLoggedIn(true);
@@ -129,7 +146,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <UserContext.Provider value={{ user, isLoggedIn, login, logout, withdraw }}>
+    <UserContext.Provider
+      value={{ user, isLoggedIn, loading, login, logout, withdraw }}
+    >
       {children}
     </UserContext.Provider>
   );

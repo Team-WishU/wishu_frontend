@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
+import { useUser } from '../../../context/UserContext'; // 👈 추가
 import '../../../styles/Mypage/SharedWishlistDetail.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || '';
@@ -56,14 +57,12 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
   bucket,
   onBack,
 }) => {
+  const { user, isLoggedIn } = useUser(); // 👈 user 정보 Context에서 받아오기
   const [comment, setComment] = useState<string>('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const [isTyping, setIsTyping] = useState<string | null>(null);
 
-  const myId = localStorage.getItem('userId') ?? '';
-  const myNickname = localStorage.getItem('nickname') ?? '';
-  const myProfileImage = localStorage.getItem('profileImage') ?? '';
   const bucketId = bucket._id || bucket.bucketId;
 
   // 소켓 연결 관리
@@ -71,11 +70,11 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
   // 입력중 표시 딜레이용 ref
   const typingTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // 소켓 연결 및 이벤트 등록 (user 정보 준비된 후에만)
   useEffect(() => {
-    if (!bucketId) return;
-    console.log("소켓 연결 시도!", API_BASE);
+    // user 정보 없으면 소켓 연결 안함
+    if (!bucketId || !user._id || !user.nickname) return;
 
-    // 1. 소켓 연결
     const socket = io(API_BASE, {
       transports: ['websocket'],
       withCredentials: true,
@@ -86,61 +85,67 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
       console.log('소켓 연결 성공!');
     });
 
-    // 2. 방 입장
     socket.emit('joinRoom', { bucketId });
 
-    // 3. 과거 채팅(댓글) 로딩 (REST 1회만)
     setLoading(true);
     fetch(`${API_BASE}/shared-buckets/${bucketId}/comments`)
       .then((res) => res.json())
       .then((data) => setComments(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
 
-    // 4. 새 메시지(댓글) 실시간 수신
     socket.on('newMessage', (msg: Comment) => {
       setComments((prev) => [...prev, msg]);
     });
 
-    // 5. 입력중 표시 이벤트 수신
     socket.on('showTyping', ({ nickname }) => {
       // 내 닉네임이 아니면 표시!
-      if (nickname !== myNickname) {
+      if (nickname !== user.nickname) {
         setIsTyping(nickname);
         if (typingTimeout.current) clearTimeout(typingTimeout.current);
         typingTimeout.current = setTimeout(() => setIsTyping(null), 2000);
       }
     });
 
-    // 언마운트 시 소켓 disconnect
     return () => {
       socket.disconnect();
       if (typingTimeout.current) clearTimeout(typingTimeout.current);
     };
-    // eslint-disable-next-line
-  }, [bucketId]);
+  // 👇 user._id, user.nickname, bucketId가 바뀔 때마다 재실행
+  }, [bucketId, user._id, user.nickname]);
 
   // 메시지 전송
   const handleSend = () => {
-    if (!comment.trim() || !bucketId || !socketRef.current) return;
+    // user 정보가 확실히 준비된 경우에만!
+    if (
+      !comment.trim() ||
+      !bucketId ||
+      !socketRef.current ||
+      !user._id ||
+      !user.nickname
+    )
+      return;
     socketRef.current.emit('sendMessage', {
       bucketId,
       user: {
-        _id: myId,
-        nickname: myNickname,
-        profileImage: myProfileImage,
+        _id: user._id,
+        nickname: user.nickname,
+        profileImage: user.avatar,
       },
       text: comment,
     });
     setComment('');
-    // UI 반영은 서버에서 newMessage 이벤트로 처리됨
   };
 
   // 입력중 감지 → 서버로 typing 이벤트 전송
   const handleTyping = () => {
-    if (socketRef.current && bucketId) {
+    if (
+      socketRef.current &&
+      bucketId &&
+      user.nickname
+    ) {
       socketRef.current.emit('typing', {
         bucketId,
-        user: { nickname: myNickname },
+        user: { nickname: user.nickname },
       });
     }
   };
@@ -148,7 +153,7 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
   // 내 닉네임 제외
   const getOtherNicknames = () =>
     (bucket.collaborators || [])
-      .filter((u) => u._id !== myId)
+      .filter((u) => u._id !== user._id)
       .map((u) => u.nickname)
       .join(', ');
 
@@ -206,20 +211,22 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
             <div style={{ color: '#aaa', padding: 16 }}>로딩중...</div>
           ) : (
             <>
-              {(comments || []).map((c, idx) => (
-                <div key={c.createdAt + c.text + idx} className="shared-comment-item">
-                  <img
-                    src={getProfileImage(c.user.profileImage)}
-                    alt={c.user.nickname}
-                    className="shared-comment-avatar"
-                    onError={(e) =>
-                      ((e.target as HTMLImageElement).src = '/assets/images/default.png')
-                    }
-                  />
-                  <b className="shared-comment-username">{c.user.nickname}</b>
-                  <span className="shared-comment-text">{c.text}</span>
-                </div>
-              ))}
+              {(comments || []).map((c, idx) =>
+                !c.user ? null : (
+                  <div key={c.createdAt + c.text + idx} className="shared-comment-item">
+                    <img
+                      src={getProfileImage(c.user.profileImage)}
+                      alt={c.user.nickname}
+                      className="shared-comment-avatar"
+                      onError={(e) =>
+                        ((e.target as HTMLImageElement).src = '/assets/images/default.png')
+                      }
+                    />
+                    <b className="shared-comment-username">{c.user.nickname}</b>
+                    <span className="shared-comment-text">{c.text}</span>
+                  </div>
+                )
+              )}
               {isTyping && (
                 <div style={{ color: '#aaa', padding: '5px 12px' }}>
                   {isTyping}님이 채팅을 입력중...
@@ -239,9 +246,14 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSend();
             }}
-            placeholder="대화를 시작하세요."
+            placeholder={isLoggedIn ? "대화를 시작하세요." : "로그인 후 채팅 가능"}
+            disabled={!isLoggedIn || !user._id || !user.nickname}
           />
-          <button className="shared-comment-send-btn" onClick={handleSend}>
+          <button
+            className="shared-comment-send-btn"
+            onClick={handleSend}
+            disabled={!isLoggedIn || !user._id || !user.nickname || !comment.trim()}
+          >
             전송
           </button>
         </div>

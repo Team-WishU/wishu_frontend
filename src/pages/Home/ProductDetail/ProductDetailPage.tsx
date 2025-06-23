@@ -52,41 +52,53 @@ const ProductDetailPage: React.FC = () => {
   if (loading) return <div>로딩 중...</div>;
   if (!product) return <div>상품을 찾을 수 없습니다.</div>;
 
+  console.log("user._id:", user._id);
+  console.log("product.uploadedBy?._id:", product.uploadedBy?._id);
+  console.log(
+    "isMyPost:",
+    String(user._id) === String(product.uploadedBy?._id)
+  );
+
   const avatarSrc = product.uploadedBy?.profileImage?.includes("/assets")
     ? product.uploadedBy.profileImage
-    : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
+    : `/assets/images/Signup/${
+        product.uploadedBy?.profileImage || "default.png"
+      }`;
 
-  const isMyPost = user._id === product.uploadedBy?._id;
+  const isMyPost = String(user._id) === String(product.uploadedBy?._id);
 
   return (
     <div>
       <Header />
       <div className="product-detail-container">
         <div className="product-detail-inner">
-          {/* 이미지 영역 */}
           <div className="product-image-section">
             <div className="category-hash">#{product.category}</div>
-            <img src={product.imageUrl} alt="product" className="product-image" />
-            {/* 작성자 프로필/닉네임 클릭 시 이동 */}
+            <img
+              src={product.imageUrl}
+              alt="product"
+              className="product-image"
+            />
             <div
               className="product-writer"
-              style={{ cursor: 'pointer' }}
-            // onClick 프로필 이동 부분 수정
-              onClick={() => navigate(`/profile/${product.uploadedBy?._id}`)} 
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(`/profile/${product.uploadedBy?._id}`)}
             >
               <img
                 src={avatarSrc}
                 alt="작성자"
                 className="writer-avatar"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = "/assets/images/Signup/default.png";
+                  (e.target as HTMLImageElement).src =
+                    "/assets/images/Signup/default.png";
                 }}
               />
-              <span className="writer-name">{product.uploadedBy?.nickname}</span>
+              <span className="writer-name">
+                {product.uploadedBy?.nickname}
+              </span>
             </div>
           </div>
 
-          {/* 정보 영역 */}
           <div className="product-info-section">
             {isMyPost && (
               <div className="edit-button-wrapper">
@@ -142,7 +154,6 @@ const ProductDetailPage: React.FC = () => {
                 </button>
               )}
             </div>
-            {/* 댓글 영역 */}
             <div className="comment-section">
               <p className="comment-title">어떠셨나요?</p>
               <div className="comment-input-wrapper">
@@ -164,12 +175,16 @@ const ProductDetailPage: React.FC = () => {
                   style={{ cursor: "pointer" }}
                 />
               </div>
-              <p className="comment-count">댓글 {product.comments?.length || 0}개</p>
+              <p className="comment-count">
+                댓글 {product.comments?.length || 0}개
+              </p>
               <div className="comment-list-scroll">
                 {product.comments?.map((comment: any, idx: number) => {
                   const profileSrc = comment.profileImage?.includes("/assets")
                     ? comment.profileImage
-                    : `/assets/images/Signup/${comment.profileImage || "default.png"}`;
+                    : `/assets/images/Signup/${
+                        comment.profileImage || "default.png"
+                      }`;
                   return (
                     <div className="comment-item" key={idx}>
                       <img

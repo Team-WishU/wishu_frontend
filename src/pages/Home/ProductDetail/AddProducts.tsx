@@ -95,6 +95,7 @@ const AddProducts = () => {
   const currentTagOptions = tagOptionsByCategory[category] || [];
 
   useEffect(() => {
+    // 카테고리가 바뀌면 태그 초기화
     setTags([]);
   }, [category]);
 
@@ -108,11 +109,22 @@ const AddProducts = () => {
           });
 
           const data = res.data;
+          console.log("서버에서 받은 tags:", data.tags);
+
           setTitle(data.title);
           setBrand(data.brand);
           setPrice(data.price.toString());
           setCategory(data.category);
-          setTags(data.tags);
+
+          // 태그가 배열이 맞는지, 문자열 배열로 변환 필요시 처리
+          setTags(
+            Array.isArray(data.tags)
+              ? data.tags.map((tag: any) =>
+                  typeof tag === "string" ? tag : tag.value || ""
+                )
+              : []
+          );
+
           setProductUrl(data.productUrl);
           setImagePreview(data.imageUrl);
         } catch (error) {

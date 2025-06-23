@@ -63,7 +63,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     if (storedUser && token) {
       const parsed = JSON.parse(storedUser);
       setUser({
-        _id: parsed._id || "",
+        _id: parsed._id,
         name: parsed.nickname || parsed.name || "",
         email: parsed.email,
         avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
@@ -83,7 +83,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       } else {
         const parsed = JSON.parse(updatedUser);
         setUser({
-          _id: parsed._id || "",
+          _id: parsed._id, // ✅ 여기도 수정
           name: parsed.nickname || parsed.name || "",
           email: parsed.email,
           avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
@@ -99,7 +99,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = (user: UserInfo) => {
     const formatted: UserInfo = {
-      _id: user._id || "",
+      _id: user._id, // ✅ 이건 이미 잘 되어 있음
       name: user.nickname || user.name || "",
       email: user.email,
       avatar: formatAvatar(user.avatar),

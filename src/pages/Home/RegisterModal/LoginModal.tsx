@@ -13,7 +13,12 @@ interface LoginModalProps {
   onLoginSuccess: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSignup, onLoginSuccess }) => {
+const LoginModal: React.FC<LoginModalProps> = ({
+  isOpen,
+  onClose,
+  onSwitchToSignup,
+  onLoginSuccess,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useUser();
@@ -39,13 +44,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSign
       console.log("로그인토큰", accessToken);
       window.dispatchEvent(new Event("userUpdated"));
 
-    login({
-      _id: user._id,
-      name: user.nickname || user.name || '',
-      nickname: user.nickname || '',
-      email: user.email,
-      avatar: user.profileImage || '',
-    });
+      login({
+        _id: user._id,
+        name: user.nickname || user.name || "",
+        nickname: user.nickname || "",
+        email: user.email,
+        avatar: user.profileImage || "",
+      });
 
       alert("로그인 성공!");
       onLoginSuccess();

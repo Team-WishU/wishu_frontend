@@ -23,25 +23,9 @@ const FloatingChatButton: React.FC = () => {
 
   return (
     <>
-      {isOpen &&
-        (inChatMode ? (
-          <ChatWindowModal onClose={closeChat} />
-        ) : (
-          <ChatPreviewModal onStartChat={startChat} onClose={closeChat} />
-        ))}
-      <button
-        className={`floating-chat-button ${isOpen ? "close" : ""}`}
-        onClick={isOpen ? closeChat : openChatPreview}
-      >
-        {isOpen ? (
-          <img
-            src="/assets/Chat/X.svg"
-            alt="닫기"
-            className="floating-chat-icon"
-          />
-        ) : (
-          "💭"
-        )}
+      {isOpen && (inChatMode ? <ChatWindowModal onClose={closeChat} /> : <ChatPreviewModal onStartChat={startChat} onClose={closeChat} />)}
+      <button className={`floating-chat-button ${isOpen ? "close" : ""}`} onClick={isOpen ? closeChat : openChatPreview}>
+        {isOpen ? <img src="/assets/Chat/X.svg" alt="닫기" className="floating-chat-icon" /> : "💭"}
       </button>
     </>
   );

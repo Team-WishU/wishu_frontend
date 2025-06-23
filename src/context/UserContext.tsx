@@ -81,9 +81,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = (user: UserInfo) => {
-    const formatted = {
-      ...user,
+    const formatted: UserInfo = {
+      _id: user._id || '',
+      name: user.nickname || user.name || '',
+      email: user.email,
       avatar: formatAvatar(user.avatar),
+      nickname: user.nickname || '',
     };
     setUser(formatted);
     setIsLoggedIn(true);

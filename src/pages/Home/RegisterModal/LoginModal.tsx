@@ -39,11 +39,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSign
       console.log("로그인토큰", accessToken);
       window.dispatchEvent(new Event("userUpdated"));
 
-      login({
-        name: user.nickname || user.name || "",
-        email: user.email,
-        avatar: user.profileImage || "", // context가 경로 가공 처리
-      });
+    login({
+      _id: user._id,
+      name: user.nickname || user.name || '',
+      nickname: user.nickname || '',
+      email: user.email,
+      avatar: user.profileImage || '',
+    });
 
       alert("로그인 성공!");
       onLoginSuccess();

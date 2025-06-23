@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
-import { useUser } from '../../../context/UserContext'; // 👈 추가
+import { useUser } from '../../../context/UserContext';
 import '../../../styles/Mypage/SharedWishlistDetail.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || '';
@@ -29,12 +29,9 @@ interface SharedBucket {
 }
 
 interface Comment {
-  user: {
-    userId?: string;
-    _id?: string;
-    nickname: string;
-    profileImage: string;
-  };
+  userId: string;
+  nickname: string;
+  profileImage: string;
   text: string;
   createdAt: string;
 }
@@ -44,7 +41,6 @@ interface SharedWishlistDetailProps {
   onBack: () => void;
 }
 
-// 프로필 이미지 처리 함수
 const getProfileImage = (url?: string) => {
   if (!url) return '/assets/images/default.png';
   if (url.startsWith('http')) return url;
@@ -57,7 +53,7 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
   bucket,
   onBack,
 }) => {
-  const { user, isLoggedIn } = useUser(); // 👈 user 정보 Context에서 받아오기
+  const { user, isLoggedIn } = useUser();
   const [comment, setComment] = useState<string>('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
@@ -65,14 +61,10 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
 
   const bucketId = bucket._id || bucket.bucketId;
 
-  // 소켓 연결 관리
   const socketRef = useRef<any>(null);
-  // 입력중 표시 딜레이용 ref
   const typingTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // 소켓 연결 및 이벤트 등록 (user 정보 준비된 후에만)
   useEffect(() => {
-    // user 정보 없으면 소켓 연결 안함
     if (!bucketId || !user._id || !user.nickname) return;
 
     const socket = io(API_BASE, {
@@ -98,7 +90,6 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
     });
 
     socket.on('showTyping', ({ nickname }) => {
-      // 내 닉네임이 아니면 표시!
       if (nickname !== user.nickname) {
         setIsTyping(nickname);
         if (typingTimeout.current) clearTimeout(typingTimeout.current);
@@ -110,27 +101,20 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
       socket.disconnect();
       if (typingTimeout.current) clearTimeout(typingTimeout.current);
     };
-  // 👇 user._id, user.nickname, bucketId가 바뀔 때마다 재실행
   }, [bucketId, user._id, user.nickname]);
 
-  // 메시지 전송
+  // ✅ userId만 서버로!
   const handleSend = () => {
-    // user 정보가 확실히 준비된 경우에만!
     if (
       !comment.trim() ||
       !bucketId ||
       !socketRef.current ||
-      !user._id ||
-      !user.nickname
+      !user._id
     )
       return;
     socketRef.current.emit('sendMessage', {
       bucketId,
-      user: {
-        _id: user._id,
-        nickname: user.nickname,
-        profileImage: user.avatar,
-      },
+      userId: user._id,
       text: comment,
     });
     setComment('');
@@ -157,6 +141,11 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
       .map((u) => u.nickname)
       .join(', ');
 
+  // 🔥 댓글(채팅) 유저 정보 안전하게 collaborators에서 찾아서 표시!
+  const getCommentUser = (userId: string) =>
+    bucket.collaborators?.find((u) => u._id === userId);
+{console.log('🔥 상태확인:', { isLoggedIn, user })}
+
   return (
     <div className="shared-wishlist-detail-container">
       <div className="shared-wishlist-left">
@@ -175,33 +164,38 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
               아직 상품이 없습니다.
             </div>
           )}
-          {(bucket.items || []).map((item) => (
-            <div key={item._id} className="shared-wishlist-item-card">
-              <img
-                src={item.imageUrl}
-                alt={item.title}
-                className="shared-wishlist-item-image"
-              />
-              <div className="shared-wishlist-item-owner">
+          {(bucket.items || []).map((item) => {
+            const owner =
+              bucket.collaborators.find((u) => u._id === item.uploadedBy?._id) ||
+              item.uploadedBy;
+            return (
+              <div key={item._id} className="shared-wishlist-item-card">
                 <img
-                  src={getProfileImage(item.uploadedBy?.profileImage)}
-                  alt={item.uploadedBy?.nickname}
-                  className="shared-wishlist-item-avatar"
-                  onError={(e) =>
-                    ((e.target as HTMLImageElement).src = '/assets/images/default.png')
-                  }
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="shared-wishlist-item-image"
                 />
-                <span className="shared-wishlist-item-nickname">
-                  {item.uploadedBy?.nickname}
-                </span>
+                <div className="shared-wishlist-item-owner">
+                  <img
+                    src={getProfileImage(owner?.profileImage)}
+                    alt={owner?.nickname}
+                    className="shared-wishlist-item-avatar"
+                    onError={(e) =>
+                      ((e.target as HTMLImageElement).src = '/assets/images/default.png')
+                    }
+                  />
+                  <span className="shared-wishlist-item-nickname">
+                    {owner?.nickname}
+                  </span>
+                </div>
+                <div style={{ marginTop: 6, fontWeight: 700 }}>{item.title}</div>
+                <div style={{ fontSize: 15 }}>{item.brand}</div>
+                <div style={{ color: '#8e4ffb' }}>
+                  {item.price?.toLocaleString()}원
+                </div>
               </div>
-              <div style={{ marginTop: 6, fontWeight: 700 }}>{item.title}</div>
-              <div style={{ fontSize: 15 }}>{item.brand}</div>
-              <div style={{ color: '#8e4ffb' }}>
-                {item.price?.toLocaleString()}원
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <div className="shared-comment-container">
@@ -211,22 +205,23 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
             <div style={{ color: '#aaa', padding: 16 }}>로딩중...</div>
           ) : (
             <>
-              {(comments || []).map((c, idx) =>
-                !c.user ? null : (
+              {(comments || []).map((c, idx) => {
+                const cu = getCommentUser(c.userId) || c; // 만약 서버가 nickname/proifleImage도 보내주면 fallback
+                return (
                   <div key={c.createdAt + c.text + idx} className="shared-comment-item">
                     <img
-                      src={getProfileImage(c.user.profileImage)}
-                      alt={c.user.nickname}
+                      src={getProfileImage(cu.profileImage)}
+                      alt={cu.nickname}
                       className="shared-comment-avatar"
                       onError={(e) =>
                         ((e.target as HTMLImageElement).src = '/assets/images/default.png')
                       }
                     />
-                    <b className="shared-comment-username">{c.user.nickname}</b>
+                    <b className="shared-comment-username">{cu.nickname}</b>
                     <span className="shared-comment-text">{c.text}</span>
                   </div>
-                )
-              )}
+                );
+              })}
               {isTyping && (
                 <div style={{ color: '#aaa', padding: '5px 12px' }}>
                   {isTyping}님이 채팅을 입력중...
@@ -235,6 +230,7 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
             </>
           )}
         </div>
+        
         <div className="shared-comment-input-row">
           <input
             className="shared-comment-input"
@@ -247,6 +243,7 @@ const SharedWishlistDetail: React.FC<SharedWishlistDetailProps> = ({
               if (e.key === 'Enter') handleSend();
             }}
             placeholder={isLoggedIn ? "대화를 시작하세요." : "로그인 후 채팅 가능"}
+            
             disabled={!isLoggedIn || !user._id || !user.nickname}
           />
           <button

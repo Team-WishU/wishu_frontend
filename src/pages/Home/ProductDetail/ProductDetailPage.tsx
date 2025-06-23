@@ -56,7 +56,7 @@ const ProductDetailPage: React.FC = () => {
     ? product.uploadedBy.profileImage
     : `/assets/images/Signup/${product.uploadedBy?.profileImage || "default.png"}`;
 
-  const isMyPost = user.name === product.uploadedBy?.nickname;
+  const isMyPost = user._id === product.uploadedBy?._id;
 
   return (
     <div>
@@ -72,7 +72,7 @@ const ProductDetailPage: React.FC = () => {
               className="product-writer"
               style={{ cursor: 'pointer' }}
             // onClick 프로필 이동 부분 수정
-              onClick={() => navigate(`/profile/${product.uploadedBy?.nickname}`)}
+              onClick={() => navigate(`/profile/${product.uploadedBy?._id}`)} 
             >
               <img
                 src={avatarSrc}

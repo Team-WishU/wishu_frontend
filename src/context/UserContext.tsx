@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface UserInfo {
+  _id?: string;
   name: string;
   email: string;
   avatar: string;
-  nickname?: string; // 추가
+  nickname?: string;
 }
 
 interface UserContextType {
@@ -15,7 +16,7 @@ interface UserContextType {
   withdraw: () => void;
 }
 
-const defaultUser: UserInfo = { name: "", email: "", avatar: "", nickname: "" };
+const defaultUser: UserInfo = { _id: "", name: "", email: "", avatar: "", nickname: "" };
 
 const UserContext = createContext<UserContextType>({
   user: defaultUser,
@@ -47,10 +48,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     if (storedUser && token) {
       const parsed = JSON.parse(storedUser);
       setUser({
+        _id: parsed._id || "",
         name: parsed.nickname || parsed.name || "",
         email: parsed.email,
         avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
-        nickname: parsed.nickname || "", // 추가
+        nickname: parsed.nickname || "",
       });
       setIsLoggedIn(true);
     }
@@ -64,10 +66,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       } else {
         const parsed = JSON.parse(updatedUser);
         setUser({
+          _id: parsed._id || "",
           name: parsed.nickname || parsed.name || "",
           email: parsed.email,
           avatar: formatAvatar(parsed.profileImage || parsed.avatar || ""),
-          nickname: parsed.nickname || "", // 추가
+          nickname: parsed.nickname || "",
         });
         setIsLoggedIn(true);
       }

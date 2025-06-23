@@ -31,15 +31,16 @@ const ProfilePage: React.FC = () => {
     const [friendRequested, setFriendRequested] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    // 1) 닉네임으로 유저 정보 조회 (ID 포함)
+    // 1) 유저 정보 조회 (id가 ObjectId)
     useEffect(() => {
-        if (!id) return; // id 없으면 요청 안 함
+        if (!id) return;
         setLoading(true);
         setError(null);
         (async () => {
             try {
                 const token = localStorage.getItem("accessToken");
-                const res = await axios.get(`${API_BASE}/users/nickname/${encodeURIComponent(id)}`, {
+                // ✅ id로 조회
+                const res = await axios.get(`${API_BASE}/users/${encodeURIComponent(id)}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setProfile(res.data);
@@ -56,13 +57,14 @@ const ProfilePage: React.FC = () => {
         })();
     }, [id]);
 
-    // 2) 닉네임으로 상품 목록 조회
+    // 2) 상품 목록 조회 (userId 기준)
     useEffect(() => {
         if (!profile) return;
         (async () => {
             try {
                 const token = localStorage.getItem("accessToken");
-                const res = await axios.get(`${API_BASE}/products/user-by-nickname/${encodeURIComponent(profile.nickname)}`, {
+                // ✅ userId로 조회
+                const res = await axios.get(`${API_BASE}/products/user/${profile._id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setProducts(res.data);
@@ -71,6 +73,7 @@ const ProfilePage: React.FC = () => {
             }
         })();
     }, [profile]);
+
 
     // 3) 친구 상태 체크 (ID 기준)
     useEffect(() => {

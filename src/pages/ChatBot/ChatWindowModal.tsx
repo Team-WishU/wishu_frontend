@@ -85,8 +85,7 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
   useEffect(() => {
     const initializeChat = async () => {
       try {
-        // nickname → user._id
-        await resetChat(user?._id);
+        await resetChat();
       } catch (err) {
         console.error("챗봇 상태 초기화 실패", err);
       }
@@ -125,7 +124,6 @@ const ChatWindowModal: React.FC<ChatWindowModalProps> = ({ onClose }) => {
     try {
       const result = await fetchRecommendations({
         message: msg,
-        userId: user?._id,
       });
 
       if (!result || !result.messages || result.messages.length === 0) return;

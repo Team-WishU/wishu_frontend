@@ -48,14 +48,19 @@ const ChatPreviewModal: React.FC<ChatPreviewModalProps> = ({
           </div>
           <div className="chat-header-text">
             <h3>WishU</h3>
-            <p className="chat-sub">
-              운영시간 보기{" "}
-              <img
-                src="/assets/Chat/see.svg"
-                alt="see more"
-                className="see-icon"
-              />
-            </p>
+            <div className="chat-window-sub-wrapper">
+              <p className="chat-window-sub">
+                운영시간 보기
+                <img
+                  src="/assets/Chat/see.svg"
+                  alt="see"
+                  className="chat-window-icon"
+                />
+              </p>
+              <div className="chat-window-tooltip">
+                연중무휴 오전 10시 ~ 오후 10시
+              </div>
+            </div>
           </div>
         </div>
         {/* 흰색 콘텐츠 박스 */}
